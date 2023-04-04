@@ -82,12 +82,9 @@ WSGI_APPLICATION = 'articlesmanager.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": 'django.db.backends.postgresql',
-        # "NAME": environ.get('DB_NAME'),
-        # "USER": environ.get('DB_USER'),
-        # "PASSWORD": environ.get('DB_PASSWORD'),
-        "NAME": 'articles',
-        "USER": 'user',
-        "PASSWORD": 'password',
+        "NAME": environ.get('DB_NAME'),
+        "USER": environ.get('DB_USER'),
+        "PASSWORD": environ.get('DB_PASSWORD'),
         "HOST": 'db',
         "PORT": '5432',
     }
