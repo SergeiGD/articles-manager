@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'core/css/core_style.css' %}" type=text/css>
+
+    {% block header_meta %}
+    {% endblock header_meta %}
+
+</head>
+<body>
+
+    <header>
+        <ul class="header-menu">
+            <li>
+                <a href="#" class="header-item {% if current_page == 'articles' %} header-item__active {% endif %}">Статьи</a>
+            </li>
+            <li>
+                <a href="#">Голосование</a>
+            </li>
+            <li>
+                <a href="#">Выйти</a>
+            </li>
+        </ul>
+    </header>
+
+    {% block content %}
+    {% endblock content %}
+
+    <footer>
+        <p>Курсовая 2023</p>
+    </footer>
+
+</body>
+</html>

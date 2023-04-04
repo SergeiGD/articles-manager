@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: articles_app
+    volumes:
+      - ./articlesmanager/:/app/
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    links:
+      - db
+    env_file:
+      - ./.env
+
+  db:
+    image: postgres:15.1-alpine3.16
+    container_name: articles_db
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:5432
+    env_file:
+      - ./.env
+
+

@@ -1,0 +1,12 @@
+.header-menu{
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-item{
+    color: #000000;
+}
+
+.header-item__active{
+    color: #006b1b;
+}
