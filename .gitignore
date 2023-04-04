@@ -1,0 +1,6 @@
+*.idea
+*.vscode
+*__pycache__*
+.env
+venv
+postgres_data
