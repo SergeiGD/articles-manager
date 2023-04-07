@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'authors.apps.AuthorsConfig',
     'articles.apps.ArticlesConfig',
+    'states.apps.StatesConfig',
 ]
 
 MIDDLEWARE = [
