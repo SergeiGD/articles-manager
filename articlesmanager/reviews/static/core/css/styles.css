@@ -1,0 +1,28 @@
+header {
+    background: white;
+    margin: 0 auto;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+  legend{
+    margin-left: 10px;
+  }
+  ul li {
+    display: inline-block;
+    padding-right: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+    margin-top:20px;
+  }
+  .card{
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+  button{
+    margin: 10px;
+  }
+  footer{
+    background-color: gray
+  }

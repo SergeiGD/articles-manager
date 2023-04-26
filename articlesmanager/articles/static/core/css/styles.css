@@ -1,0 +1,63 @@
+header {
+    background: white;
+    margin: 0 auto;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+  #fcin{
+    height: auto;
+  }
+  .form{
+    padding: 10%;
+    margin: 10%;
+  }
+  ul li {
+    display: inline-block;
+    padding-right: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+    margin-top:20px;
+  }
+  .card{
+    margin: 0 auto; 
+    float: none; 
+    margin-bottom: 10px; 
+  }
+  .btnin{
+    color: black;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: darkgray;
+    width: 100%;
+  }
+  footer{
+    background-color: darkgray
+  }
+  .card{
+    width: 70%;
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+  }
+  input {
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    height: 3em;
+    line-height: 3em;
+    border-radius: 5 px;
+    border: 1px solid;
+    padding: 0 1.5em;
+  }
+  .op {
+    position: relative;
+  }
+  .opbtn{
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 3em;
+  }
