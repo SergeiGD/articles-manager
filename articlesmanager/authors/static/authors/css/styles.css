@@ -26,11 +26,20 @@ header {
     border-radius: 10px;
     width: 50%;
   }
+  #detail{
+    width: 90%;
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px;
+    margin-top: 10px; /* Added */
+    padding: 10px; 
+  }
   .card{
     width: 70%;
     margin: 0 auto; /* Added */
     float: none; /* Added */
-    margin-bottom: 10px; /* Added */
+    margin-bottom: 10px;
+    margin-top: 10px; /* Added */
     padding: 10px;
   }
   label{

@@ -6,12 +6,21 @@ header {
     justify-content: space-between;
     align-items:center;
   }
-  #fcin{
-    height: auto;
+  .btnm{
+    margin: 10px 10px 10px 0px;
   }
   .form{
     padding: 10%;
     margin: 10%;
+  }
+  .text{
+    display: inline;
+    font-size:  18px;
+  }
+  .metrics{
+    width: 80%;
+    margin: 10px;
+    height: 50px;
   }
   ul li {
     display: inline-block;
@@ -20,29 +29,28 @@ header {
     font-size: 20px;
     margin-top:20px;
   }
-  .card{
-    margin: 0 auto; 
-    float: none; 
-    margin-bottom: 10px; 
-  }
-  .btnin{
-    color: black;
-    background-color: whitesmoke;
-    border-radius: 5px;
-    border: 1px solid;
-    border-color: darkgray;
-    width: 100%;
-  }
   footer{
     background-color: darkgray
   }
   .card{
     width: 70%;
+    margin: 0 auto; 
+    float: none; 
+    margin-bottom: 10px; 
+    margin: 0 auto; 
+    float: none; 
+    margin-bottom: 10px; 
+    padding: 10px;
+  }
+  #detail{
+    width: 90%;
     margin: 0 auto; /* Added */
     float: none; /* Added */
-    margin-bottom: 10px; /* Added */
+    margin-bottom: 10px;
+    margin-top: 10px; /* Added */
+    padding: 10px; 
   }
-  input {
+ .na {
     margin-top: 10px;
     display: block;
     width: 100%;
@@ -51,6 +59,7 @@ header {
     border-radius: 5 px;
     border: 1px solid;
     padding: 0 1.5em;
+    border-color: #DEE2E6;
   }
   .op {
     position: relative;
