@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Users</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Просмотр автора #{{ author.pk }}</legend>
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-6 d-flex flex-column gap-3">
+                    <div class="div">
+                        <span class="fs-5">Фамилия: </span>
+                        <span class="fs-5">{{ author.last_name }}</span>
+                    </div>
+                    <div class="div">
+                        <span class="fs-5">Имя: </span>
+                        <span class="fs-5">{{ author.first_name }}</span>
+                    </div>
+                </div>
+                <div class="col-6 d-flex flex-column gap-3">
+                    <div class="div">
+                        <span class="fs-5">Отчество: </span>
+                        <span class="fs-5">{{ author.middle_name }}</span>
+                    </div>
+                    <div class="div">
+                        <span class="fs-5">Эл. почта": </span>
+                        <span class="fs-5">{{ author.email }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3 mt-3">
+                <div>
+                    <a href="{% url 'authors' %}" class="btn btn-outline-primary">К списку авторов</a>
+                </div>
+                <div>
+                    <a href="{{ author.get_update_url }}" class="btn btn-warning">Изменить</a>
+                </div>
+                <div>
+                    <form action="{{ author.get_delete_url }}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}
