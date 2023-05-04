@@ -1,5 +1,7 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
 from .models import Author
@@ -21,9 +23,10 @@ class AuthorsCreate(CreateView):
     model = Author
     context_object_name = 'author'
     form_class = AuthorsForm
+    success_url = reverse_lazy('authors')
 
 
-class AuthorsDetail(DeleteView):
+class AuthorsDetail(DetailView):
     template_name = 'authors/authors_detail.html'
     model = Author
     context_object_name = 'author'
@@ -37,13 +40,22 @@ class AuthorsUpdate(UpdateView):
     model = Author
     context_object_name = 'author'
     form_class = AuthorsForm
+    success_url = reverse_lazy('authors')
 
     def get_queryset(self):
         return Author.objects.filter(date_deleted=None)
 
 
-def delete_author(request, pk):
-    author = get_object_or_404(Author, pk=pk)
-    author.date_deleted = timezone.now()
-    author.save()
-    return redirect('authors')
+class AuthorsDelete(DeleteView):
+    model = Author
+    success_url = reverse_lazy('authors')
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Call the delete() method on the fetched object and then redirect to the
+        success URL.
+        """
+        author = self.get_object()
+        author.date_deleted = timezone.now()
+        author.save()
+        return HttpResponseRedirect(self.get_success_url())
