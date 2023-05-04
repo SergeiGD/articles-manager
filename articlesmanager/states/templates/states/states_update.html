@@ -3,12 +3,12 @@
 {% load static %}
 
 {% block header_meta %}
-    <title>Users</title>
+    <title> Изменить статью #{{ state.pk }}</title>
 {% endblock header_meta %}
 
 {% block content %}
 
-    <legend class="text-center"> Изменить автора</legend>
+    <legend class="text-center"> Изменить статью #{{ state.pk }}</legend>
     <div class="card ">
         <form class="card-body" method="POST" action=".">
             {% csrf_token %}

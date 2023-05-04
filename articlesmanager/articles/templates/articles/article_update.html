@@ -3,13 +3,13 @@
 {% load static %}
 
 {% block header_meta %}
-    <title>Users</title>
+    <title>Изменить статью #{{ article.pk }}</title>
     <link rel="stylesheet" href="{% static 'articles/css/styles.css' %}" media="all">
 {% endblock header_meta %}
 
 {% block content %}
 
-    <legend class="text-center">Изменить статью</legend>
+    <legend class="text-center">Изменить статью #{{ article.pk }}</legend>
     <div class="card">
         <form class="card-body" method="POST" action="." enctype="multipart/form-data">
             {% csrf_token %}

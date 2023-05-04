@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AuthorsCreate, AuthorsList, AuthorsUpdate, AuthorsDetail, delete_author, AuthorsDelete
+from .views import AuthorsCreate, AuthorsList, AuthorsUpdate, AuthorsDetail, AuthorsDelete
 
 
 urlpatterns = [
