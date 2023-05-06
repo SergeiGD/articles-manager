@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+	<link rel="stylesheet" href="../../static/groups/css/styles.css" media="all">
+	<title> Title </title>  
+
+</head>
+<body>
+      <header>
+        <ul class="nav-link-left">
+          <li><a href="./articles_list.html">Статьи на рецензию</a></li>
+            <li><a href="#">Открытые голосования</a></li>
+        </ul>
+        <ul class="nav-link-right">
+          <li><a href="#"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Владимир Викторович</a></li>
+            <li><a href="#">Выйти</a></li>
+        </ul>
+    </header>
+    <hr/>
+    <legend class="text-center"> Права группы</legend>
+    <div class="card mx-auto m-3">
+        <div class="card-body">
+            <div class=" mb-3">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Право</th>
+                        <th scope="col">Расшифровка</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Какое-то право</td>
+                        <td>Какая-то жевань</td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                  <nav>
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Предыдущая">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Следующая">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Профиль</h5>
+                  <button type="button"class="btn-close" data-bs-dismiss="modal" arial-label="Закрыть"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="card" id="detail">
+                      <div cass="card-body">
+                  <div class="mb-3">
+                      <label for="surname" class="form-label">Фамилия:</label>
+                      <label for="surname" class="form-label">Чета встанет</label>
+                  </div>
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Имя:</label>
+                    <label for="surname" class="form-label">Чета встанет</label>
+                  </div>
+                  <div class="mb-3">
+                      <label for="namebaty" class="form-label">Отчество:</label>
+                      <label for="surname" class="form-label">Чета встанет</label>
+                  </div>
+                  <div class="mb-3">
+                      <label for="email" class="form-label">Электронная почта:</label>
+                      <label for="surname" class="form-label">Чета встанет</label>
+                  </div>
+                  <div class="mb-3">
+                      <label for="name" class="form-label">Дополнительная ифнормация:</label>
+                      <label for="surname" class="form-label">Чета встанет</label>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</body>
+</html>
