@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Создать автора</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Создать автора</legend>
+    <div class="card">
+        <form class="card-body" action="." method="POST">
+
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.middle_name.id_for_label }}" class="form-label">{{ form.middle_name.label }}</label>
+                {{ form.middle_name }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+            <div class="d-flex justify-content gap-5">
+                <div>
+                    <button type="submit" class="btn btn-primary ">Сохранить</button>
+                </div>
+                <div>
+                    <a href="{% url 'authors' %}" class="btn btn-outline-primary">Отменить</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}
