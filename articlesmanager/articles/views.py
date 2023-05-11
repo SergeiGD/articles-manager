@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -6,6 +7,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView, D
 from django.core.paginator import Paginator
 from .models import Article, ArticleState
 from authors.models import Author
+from users.models import CustomUser
 from states.models import State
 from .forms import ArticlesForm
 import json
@@ -30,7 +32,7 @@ class ArticlesDetail(DetailView):
         return Article.objects.filter(date_deleted=None)
 
 
-class ArticlesCreate(CreateView):
+class ArticlesCreate(LoginRequiredMixin, CreateView):
     template_name = 'articles/articles_create.html'
     model = Article
     context_object_name = 'article'
@@ -42,6 +44,7 @@ class ArticlesCreate(CreateView):
         state = State.objects.get(pk=state_id)
         form.instance.save()
         form.instance.states.add(state)
+        form.instance.users.add(self.request.user)
         return HttpResponseRedirect(redirect_to=reverse_lazy('articles'))
 
     def form_invalid(self, form):
@@ -79,16 +82,36 @@ def remove_author_from_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
+def remove_user_from_article(request, pk, user_id):
+    article = Article.objects.get(pk=pk)
+    user = CustomUser.objects.get(pk=user_id)
+    article.users.remove(user)
+    return HttpResponseRedirect(article.get_update_url())
+
+
 def select_author(request, pk):
     article = Article.objects.get(pk=pk)
     context = {'article': article, 'authors': Author.objects.filter(date_deleted=None)}
     return render(request, 'articles/add_author_to_article.html', context)
 
 
+def select_user(request, pk):
+    article = Article.objects.get(pk=pk)
+    context = {'article': article, 'users': CustomUser.objects.filter(date_deleted=None)}
+    return render(request, 'articles/add_user_to_article.html', context)
+
+
 def add_author_to_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
     article.authors.add(author)
+    return HttpResponseRedirect(article.get_update_url())
+
+
+def add_user_to_article(request, pk, user_id):
+    article = Article.objects.get(pk=pk)
+    user = CustomUser.objects.get(pk=user_id)
+    article.users.add(user)
     return HttpResponseRedirect(article.get_update_url())
 
 

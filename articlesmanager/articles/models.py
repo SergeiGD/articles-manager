@@ -42,17 +42,17 @@ class Article(models.Model):
     )
     users = models.ManyToManyField(
         verbose_name='Проверяющие',
-        related_name='users',
-        related_query_name='user',
+        related_name='articles',
+        related_query_name='article',
         to=CustomUser,
     )
+    is_ready_to_votings = models.BooleanField(default=False, verbose_name='Готова к голосованию')
     date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
     date_edited = models.DateTimeField(null=True, blank=True, verbose_name='Дата изменения')
     date_deleted = models.DateTimeField(null=True, blank=True, verbose_name='Дата удаления')
 
 
     def get_current_state(self):
-        self.states.update()
         return self.states.filter(
             articlestate__date_set=self.states.aggregate(max_date=Max('articlestate__date_set'))['max_date']
         ).first()
@@ -75,3 +75,6 @@ class Article(models.Model):
 
     def get_select_author_url(self):
         return reverse('select_author', kwargs={'pk': self.pk})
+
+    def get_select_user_url(self):
+        return reverse('select_user', kwargs={'pk': self.pk})

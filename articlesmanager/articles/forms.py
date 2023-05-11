@@ -20,7 +20,7 @@ class ArticlesForm(forms.ModelForm):
 
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['file'].widget.attrs.update({'class': 'form-control', 'is_initial': False})
-        self.fields['file'].label = "Файл"
+        self.fields['file'].label = 'Файл'
         self.fields['unique'].widget.attrs.update({'class': 'metrics form-control'})
         self.fields['quoting'].widget.attrs.update({'class': 'metrics form-control'})
         self.fields['bibliography'].widget.attrs.update({'class': 'form-control other'})
