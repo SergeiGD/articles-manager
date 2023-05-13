@@ -14,15 +14,25 @@
 
 </head>
 
-<header>
-    <ul class="nav-link-left">
-        <li><a href="./articles_list.html">Статьи на рецензию</a></li>
-        <li><a href="#">Открытые голосования</a></li>
+<header class="d-flex justify-content-between">
+
+    <ul class="nav col-8 align-items-center mb-2 text-start">
+        <li><a href="{% url 'articles' %}" class="nav-link px-2">Статьи</a></li>
+        <li><a href="{% url 'authors' %}" class="nav-link px-2">Авторы</a></li>
+        <li><a href="{% url 'states' %}" class="nav-link px-2">Статусы</a></li>
+        <li><a href="{% url 'votings' %}" class="nav-link px-2">Голосования</a></li>
+        <li><a href="{% url 'reviews' %}" class="nav-link px-2">Рецензии</a></li>
+        <li><a href="{% url 'users' %}" class="nav-link px-2">Пользователи</a></li>
+        <li><a href="{% url 'groups' %}" class="nav-link px-2">Группы</a></li>
     </ul>
-    <ul class="nav-link-right">
-        <li><a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Владимир Викторович</a></li>
-        <li><a href="#">Выйти</a></li>
-    </ul>
+
+    <div class="col-4 text-end px-3">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" class="btn btn-outline-primary me-2">
+            {{ request.user.first_name }} {{ request.user.last_name }}
+        </a>
+        <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
+    </div>
+
 </header>
 <hr/>
 
@@ -42,23 +52,19 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="surname" class="form-label">Фамилия:</label>
-                            <label for="surname" class="form-label">Чета встанет</label>
+                            <label for="surname" class="form-label">{{ request.user.last_name }}</label>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Имя:</label>
-                            <label for="surname" class="form-label">Чета встанет</label>
+                            <label for="surname" class="form-label">{{ request.user.first_name }}</label>
                         </div>
                         <div class="mb-3">
                             <label for="namebaty" class="form-label">Отчество:</label>
-                            <label for="surname" class="form-label">Чета встанет</label>
+                            <label for="surname" class="form-label">{{ request.user.middle_name }}</label>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Электронная почта:</label>
-                            <label for="surname" class="form-label">Чета встанет</label>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Дополнительная ифнормация:</label>
-                            <label for="surname" class="form-label">Чета встанет</label>
+                            <label for="surname" class="form-label">{{ request.user.email }}</label>
                         </div>
                     </div>
                 </div>

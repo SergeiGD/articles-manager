@@ -11,4 +11,5 @@ class ReviewsForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['comment'].widget.attrs.update({'class': 'form-control'})
+        self.fields['approved'].widget.attrs.update({'class': 'form-check-input'})
 

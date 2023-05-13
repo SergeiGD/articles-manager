@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -12,7 +13,7 @@ from states.models import State
 from .forms import ArticlesForm
 import json
 
-class ArticlesList(ListView):
+class ArticlesList(LoginRequiredMixin, ListView):
     template_name = 'articles/articles_list.html'
     model = Article
     context_object_name = 'articles'
@@ -23,16 +24,22 @@ class ArticlesList(ListView):
         return Article.objects.filter(date_deleted=None)
 
 
-class ArticlesDetail(DetailView):
+class ArticlesDetail(LoginRequiredMixin, DetailView):
     template_name = 'articles/articles_detail.html'
     model = Article
     context_object_name = 'article'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['can_create_review'] = self.request.user.can_create_review(self.object)
+        return context
 
     def get_queryset(self):
         return Article.objects.filter(date_deleted=None)
 
 
-class ArticlesCreate(LoginRequiredMixin, CreateView):
+class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('add_article', )
     template_name = 'articles/articles_create.html'
     model = Article
     context_object_name = 'article'
@@ -52,12 +59,12 @@ class ArticlesCreate(LoginRequiredMixin, CreateView):
         return response
 
 
-class ArticlesUpdate(UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('change_article',)
     template_name = 'articles/article_update.html'
     model = Article
     context_object_name = 'article'
     form_class = ArticlesForm
-    success_url = reverse_lazy('articles')
 
     def get_queryset(self):
         return Article.objects.filter(date_deleted=None)
@@ -72,9 +79,18 @@ class ArticlesUpdate(UpdateView):
                 article_id=form.instance.pk,
                 date_set=timezone.now()
             )
-        return HttpResponseRedirect(redirect_to=reverse_lazy('articles'))
+        return HttpResponseRedirect(redirect_to=self.object.get_show_url())
 
 
+@permission_required('change_article')
+def mark_as_republished(request, pk):
+    article = Article.objects.get(pk=pk)
+    article.date_repulished = timezone.now()
+    article.save()
+    return HttpResponseRedirect(article.get_show_url())
+
+
+@permission_required('change_article')
 def remove_author_from_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -82,6 +98,7 @@ def remove_author_from_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
+@permission_required('change_article')
 def remove_user_from_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -89,18 +106,43 @@ def remove_user_from_article(request, pk, user_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
-def select_author(request, pk):
-    article = Article.objects.get(pk=pk)
-    context = {'article': article, 'authors': Author.objects.filter(date_deleted=None)}
-    return render(request, 'articles/add_author_to_article.html', context)
+class SelectAuthorsList(PermissionRequiredMixin, ListView):
+    permission_required = ('change_article', )
+    template_name = 'articles/add_author_to_article.html'
+    model = Author
+    context_object_name = 'authors'
+    paginator_class = Paginator
+    paginate_by = 8
+
+    def get_queryset(self):
+        return Author.objects.filter(date_deleted=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article_pk = self.kwargs['pk']
+        context['article'] = get_object_or_404(Article, pk=article_pk)
+        return context
 
 
-def select_user(request, pk):
-    article = Article.objects.get(pk=pk)
-    context = {'article': article, 'users': CustomUser.objects.filter(date_deleted=None)}
-    return render(request, 'articles/add_user_to_article.html', context)
+class SelectUsersList(PermissionRequiredMixin, ListView):
+    permission_required = ('change_article',)
+    template_name = 'articles/add_user_to_article.html'
+    model = CustomUser
+    context_object_name = 'users'
+    paginator_class = Paginator
+    paginate_by = 8
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(date_deleted=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article_pk = self.kwargs['pk']
+        context['article'] = get_object_or_404(Article, pk=article_pk)
+        return context
 
 
+@permission_required('change_article')
 def add_author_to_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -108,6 +150,7 @@ def add_author_to_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
+@permission_required('change_article')
 def add_user_to_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -122,7 +165,8 @@ def download_article(request, pk):
     return response
 
 
-class ArticlesDelete(DeleteView):
+class ArticlesDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('delete_article', )
     model = Article
     success_url = reverse_lazy('articles')
 

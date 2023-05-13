@@ -46,12 +46,20 @@
                        class="form-label">{{ form.bibliography.label }}</label>
                 {{ form.bibliography }}
             </div>
-            <div class="mb-3">
 
+            <div class="mb-3">
                 <label for="{{ form.current_state.id_for_label }}"
                        class="form-label">{{ form.current_state.label }}</label>
                 {{ form.current_state }}
             </div>
+
+            {% if article.enable_for_votings %}
+                <div class="mb-3">
+                    {{ form.is_ready_to_votings }}
+                    <label for="{{ form.is_ready_to_votings.id_for_label }}" class="form-check-label">{{ form.is_ready_to_votings.label }}</label>
+                </div>
+            {% endif %}
+
             <div class="d-flex gap-3">
                 <div>
                     <button type="submit" class="btn btn-primary ">Сохранить</button>

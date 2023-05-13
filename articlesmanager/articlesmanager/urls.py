@@ -25,5 +25,8 @@ urlpatterns = [
     path('articles/', include('articles.urls')),
     path('reviews/', include('reviews.urls')),
     path('users/', include('users.urls')),
+    path('votings/', include('votings.urls')),
+    path('groups/', include('groups.urls')),
+    path('positions/', include('users.positions_urls')),
     path('', include('core.urls')),
 ]

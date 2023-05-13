@@ -27,7 +27,7 @@ SECRET_KEY = environ.get('SECRET_KEY', 'my_very_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.01', ]
+ALLOWED_HOSTS = ['localhost', '127.0.01', '192.168.1.57']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'notifications.apps.NotificationsConfig',
     'votings.apps.VotingsConfig',
     'reviews.apps.ReviewsConfig',
+    'groups.apps.GroupsConfig',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 LOGIN_URL = reverse_lazy('login')
+
+# EMAIL
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST = environ['EMAIL_HOST']
+EMAIL_HOST_USER = environ['EMAIL_USER']
+DEFAULT_FROM_EMAIL = environ['EMAIL_USER']
+EMAIL_HOST_PASSWORD = environ['EMAIL_PASSWORD']
+EMAIL_PORT = 465

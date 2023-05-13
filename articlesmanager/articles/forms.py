@@ -6,7 +6,7 @@ from states.models import State
 class ArticlesForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ['name', 'file', 'unique', 'bibliography', 'quoting']
+        fields = ['name', 'file', 'unique', 'bibliography', 'quoting', 'is_ready_to_votings']
 
     STATUS_CHOICES = [(status.id, status.name) for status in State.objects.filter(date_deleted=None)]
     current_state = forms.ChoiceField(choices=STATUS_CHOICES)
@@ -26,3 +26,5 @@ class ArticlesForm(forms.ModelForm):
         self.fields['bibliography'].widget.attrs.update({'class': 'form-control other'})
         self.fields['current_state'].widget.attrs.update({'class': 'form-select'})
         self.fields['current_state'].label = 'Статус'
+        self.fields['is_ready_to_votings'].widget.attrs.update({'class': 'form-check-input'})
+        self.fields['is_ready_to_votings'].label = 'Готова к голосованию'

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import timezone
 from .managers import CustomUserManager
 
@@ -28,10 +29,47 @@ class CustomUser(AbstractUser):
     date_deleted = models.DateTimeField(null=True, blank=True, verbose_name='Дата удаления')
 
     def get_articles_to_review(self):
-        print('asdasdd')
-        print('asdasdd')
+        result = []
+        user_articles = self.articles.filter(
+            is_ready_to_votings=False,
+            date_deleted=None,
+            users__in=[self],
+        ).all()
+        for article in user_articles:
+            if not article.reviews.filter(
+                user=self,
+                date_created__gt=article.date_repulished,
+            ).exists():
+                result.append(article)
 
-        return self.articles.filter(is_ready_to_votings=False, date_deleted=None)
+        return result
+
+    def can_create_review(self, article):
+        if article.date_deleted is not None or article.is_ready_to_votings:
+            return False
+
+        if self not in article.users.all():
+            return False
+
+        if article.reviews.filter(
+            user=self,
+            date_created__gt=article.date_repulished
+        ).exists():
+            return False
+
+        return True
+
+    def get_detail_url(self):
+        return reverse('detail_users', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('update_users', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('delete_users', kwargs={'pk': self.pk})
+
+    def get_reset_password_url(self):
+        return reverse('reset_user_password', kwargs={'pk': self.pk})
 
 
 class Position(models.Model):
@@ -42,6 +80,15 @@ class Position(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_update_url(self):
+        return reverse('update_positions', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('delete_positions', kwargs={'pk': self.pk})
+
+    def get_detail_url(self):
+        return reverse('detail_positions', kwargs={'pk': self.pk})
 
 
 @receiver(pre_save, sender=CustomUser)

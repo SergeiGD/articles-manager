@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from users.models import CustomUser
 from articles.models import Article
@@ -22,3 +23,6 @@ class Review(models.Model):
         related_query_name='review',
     )
     date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+
+    def get_detail_url(self):
+        return reverse('detail_review', kwargs={'review_id': self.pk, 'pk': self.article.pk})
