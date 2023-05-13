@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from os import environ, path
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,7 @@ SECRET_KEY = environ.get('SECRET_KEY', 'my_very_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.01', ]
+ALLOWED_HOSTS = ['localhost', '127.0.01', '192.168.1.57']
 
 
 # Application definition
@@ -42,6 +44,11 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'authors.apps.AuthorsConfig',
     'articles.apps.ArticlesConfig',
+    'states.apps.StatesConfig',
+    'notifications.apps.NotificationsConfig',
+    'votings.apps.VotingsConfig',
+    'reviews.apps.ReviewsConfig',
+    'groups.apps.GroupsConfig',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +143,20 @@ MEDIA_ROOT = path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AUTH MODEL
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_URL = reverse_lazy('login')
+
+# EMAIL
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST = environ['EMAIL_HOST']
+EMAIL_HOST_USER = environ['EMAIL_USER']
+DEFAULT_FROM_EMAIL = environ['EMAIL_USER']
+EMAIL_HOST_PASSWORD = environ['EMAIL_PASSWORD']
+EMAIL_PORT = 465

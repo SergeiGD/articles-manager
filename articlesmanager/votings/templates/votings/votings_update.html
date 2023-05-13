@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Изменение голосование</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Изменение голосование</legend>
+    <form class="card voting" method="POST" action=".">
+
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="mb-3">
+                <span class="form-label">Статья:</span>
+                <a href="{{ voting.article.get_show_url }}">{{ voting.article.name }}</a>
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.date_start.id_for_label }}" class="form-label m-0">{{ form.date_start.label }}</label>
+                {{ form.date_start }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.date_end.id_for_label }}" class="form-label m-0">{{ form.date_end.label }}</label>
+                {{ form.date_end }}
+            </div>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="submit" class="btn btn-primary ">Сохранить</button>
+                </div>
+                <div>
+                    <a href="{% url 'votings' %}" class="btn btn-outline-primary">Отменить</a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock content %}

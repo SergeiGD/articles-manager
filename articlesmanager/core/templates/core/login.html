@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Добавить рецензента к статье</title>
+    <link rel="stylesheet" href="{% static 'articles/css/styles.css' %}" media="all">
+{% endblock header_meta %}
+
+{% block content %}
+
+    <form action="." method="POST" class="w-50 mx-auto">
+        {% csrf_token %}
+        <legend class="text-center">Вход</legend>
+        <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+            {{ form.username }}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+
+{% endblock content %}
