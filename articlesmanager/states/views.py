@@ -1,12 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
 from .models import State
 from .forms import StatesForm
 
-class StatesList(ListView):
+class StatesList(LoginRequiredMixin, ListView):
     template_name = 'states/states_list.html'
     model = State
     context_object_name = 'states'
@@ -17,7 +18,8 @@ class StatesList(ListView):
         return State.objects.filter(date_deleted=None)
 
 
-class StatesCreate(CreateView):
+class StatesCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('add_state',)
     template_name = 'states/states_create.html'
     model = State
     context_object_name = 'states'
@@ -25,7 +27,8 @@ class StatesCreate(CreateView):
     success_url = reverse_lazy('states')
 
 
-class StatesUpdate(UpdateView):
+class StatesUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('change_state',)
     template_name = 'states/states_update.html'
     model = State
     context_object_name = 'state'
@@ -36,7 +39,7 @@ class StatesUpdate(UpdateView):
         return State.objects.filter(date_deleted=None)
 
 
-class StatesDetail(DeleteView):
+class StatesDetail(LoginRequiredMixin, DetailView):
     template_name = 'states/states_detail.html'
     model = State
     context_object_name = 'state'
@@ -45,7 +48,8 @@ class StatesDetail(DeleteView):
         return State.objects.filter(date_deleted=None)
 
 
-class StatesDelete(DeleteView):
+class StatesDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('delete_state', )
     model = State
     success_url = reverse_lazy('states')
 

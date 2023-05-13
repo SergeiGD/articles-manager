@@ -1,3 +1,106 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
+from django.core.paginator import Paginator
+from .models import Voting, VotingUsers
+from articles.models import Article
+from .forms import VotingForm
 
-# Create your views here.
+
+class VotingsList(LoginRequiredMixin, ListView):
+    template_name = 'votings/votings_list.html'
+    model = Voting
+    context_object_name = 'votings'
+    paginator_class = Paginator
+    paginate_by = 8
+
+
+class VotingsCreate(LoginRequiredMixin, CreateView):
+    template_name = 'votings/votings_create.html'
+    model = Voting
+    context_object_name = 'voting'
+    form_class = VotingForm
+    success_url = reverse_lazy('votings')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article = get_object_or_404(Article, pk=self.kwargs['pk'])
+        context['article'] = article
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        article = context['article']
+        form.instance.article = article
+        form.instance.save()
+        return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
+
+
+class VotingsUpdate(UpdateView):
+    template_name = 'votings/votings_update.html'
+    model = Voting
+    context_object_name = 'voting'
+    form_class = VotingForm
+    success_url = reverse_lazy('votings')
+
+
+class VotingsDetail(DetailView):
+    template_name = 'votings/votings_details.html'
+    model = Voting
+    context_object_name = 'voting'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_vote = self.request.user.votingusers_set.filter(voting_id=self.object.id).first()
+        if user_vote is not None:
+            if user_vote.agreed:
+                context['current_vote'] = 'За'
+            else:
+                context['current_vote'] = 'Против'
+        else:
+            context['current_vote'] = 'Нет голоса'
+        return context
+
+
+def voting_agreed(request, pk):
+    voting = get_object_or_404(Voting, pk=pk)
+    user_voting = VotingUsers.objects.filter(
+        voting_id=voting.id,
+        user_id=request.user.id,
+    ).first()
+    if user_voting is not None:
+        user_voting.agreed = True
+        user_voting.date_changed = timezone.now()
+        user_voting.save()
+    else:
+        VotingUsers.objects.create(
+            voting_id=voting.id,
+            user_id=request.user.id,
+            agreed=True,
+            date_changed=timezone.now(),
+        )
+    return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
+
+
+def voting_disagreed(request, pk):
+    voting = get_object_or_404(Voting, pk=pk)
+    user_voting = VotingUsers.objects.filter(
+        voting_id=voting.id,
+        user_id=request.user.id,
+    ).first()
+    if user_voting is not None:
+        user_voting.agreed = False
+        user_voting.date_changed = timezone.now()
+        user_voting.save()
+    else:
+        VotingUsers.objects.create(
+            voting_id=voting.id,
+            user_id=request.user.id,
+            agreed=False,
+            date_changed=timezone.now(),
+        )
+    return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))

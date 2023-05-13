@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Выбор статьи для рецензии</title>
+    <link rel="stylesheet" href="{% static 'articles/css/styles.css' %}" media="all">
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Выбор статьи для рецензии</legend>
+    <div class="row justify-content-center">
+
+        <div class="col-10">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Статья</th>
+                    <th scope="col">Статус статьи</th>
+                    <th scope="col">Дата обновления</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <th scope="row">{{ article.pk }}</th>
+                        <td>{{ article.name }}</td>
+                        <td>{{ article.get_current_state.name }}</td>
+                        <td>{{ article.date_edited }}</td>
+                        <td>
+                            <a href="{{ article.get_show_url }}" class="btn btn-primary">Выбрать</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Предыдущая">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Следующая">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+{% endblock content %}

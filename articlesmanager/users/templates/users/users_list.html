@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Список пользователей</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Список пользователей</legend>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <a href="{% url 'create_users' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Фамилия</th>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Отчество</th>
+                    <th scope="col">Эл. почта</th>
+                    <th scope="col">Должность</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ user.pk }}</th>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.middle_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.position }}</td>
+                        <td>
+                            <a href="{{ user.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% include 'core/pagination.html' %}
+
+{% endblock content %}
+
+

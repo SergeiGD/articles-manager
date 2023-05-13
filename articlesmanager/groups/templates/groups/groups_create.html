@@ -1,73 +1,33 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-	<link rel="stylesheet" href="../../static/groups/css/styles.css" media="all">
-	<title> Title </title>  
+{% extends 'core/base.html' %}
 
-</head>
-<body>
-      <header>
-        <ul class="nav-link-left">
-          <li><a href="./articles_list.html">Статьи на рецензию</a></li>
-            <li><a href="#">Открытые голосования</a></li>
-        </ul>
-        <ul class="nav-link-right">
-          <li><a href="#"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Владимир Викторович</a></li>
-            <li><a href="#">Выйти</a></li>
-        </ul>
-    </header>
-    <hr/>
-    <legend class="text-center"> Создать группу</legend>
-    <div class="card mx-auto m-3">
-        <div class="card-body">
+{% load static %}
+
+{% block header_meta %}
+    <title>Создать статус статьи</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center"> Создать статус статьи</legend>
+    <div class="card">
+        <form class="card-body" action="." method="POST">
+
+            {% csrf_token %}
+
             <div class="mb-3">
-                <label>Название группы</label>
-                <input class="form-control">
+                <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+                {{ form.name }}
             </div>
-            <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="button">Сохранить</button>
-                <button class="btn btn-outline-primary" type="button">Отменить</button>
-              </div>
-        </div>
+
+            <div class="d-flex justify-content gap-5">
+                <div>
+                    <button type="submit" class="btn btn-primary ">Сохранить</button>
+                </div>
+                <div>
+                    <a href="{% url 'groups' %}" class="btn btn-outline-primary">Отменить</a>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">Профиль</h5>
-                  <button type="button"class="btn-close" data-bs-dismiss="modal" arial-label="Закрыть"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="card" id="detail">
-                      <div cass="card-body">
-                  <div class="mb-3">
-                      <label for="surname" class="form-label">Фамилия:</label>
-                      <label for="surname" class="form-label">Чета встанет</label>
-                  </div>
-                  <div class="mb-3">
-                    <label for="name" class="form-label">Имя:</label>
-                    <label for="surname" class="form-label">Чета встанет</label>
-                  </div>
-                  <div class="mb-3">
-                      <label for="namebaty" class="form-label">Отчество:</label>
-                      <label for="surname" class="form-label">Чета встанет</label>
-                  </div>
-                  <div class="mb-3">
-                      <label for="email" class="form-label">Электронная почта:</label>
-                      <label for="surname" class="form-label">Чета встанет</label>
-                  </div>
-                  <div class="mb-3">
-                      <label for="name" class="form-label">Дополнительная ифнормация:</label>
-                      <label for="surname" class="form-label">Чета встанет</label>
-                  </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-</body>
-</html>
+
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Список статей на рецензию</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Список статей на рецензию</legend>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Статья</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <th scope="row">{{ article.pk }}</th>
+                        <td>{{ article.name }}</td>
+                        <td>
+                            <a href="{{ article.get_show_url }}" class="btn btn-primary">Просмотреть</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% include 'core/pagination.html' %}
+
+{% endblock content %}
+
+
