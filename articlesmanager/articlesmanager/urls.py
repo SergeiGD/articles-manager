@@ -28,5 +28,6 @@ urlpatterns = [
     path('votings/', include('votings.urls')),
     path('groups/', include('groups.urls')),
     path('positions/', include('users.positions_urls')),
+    path('notifications/', include('notifications.urls')),
     path('', include('core.urls')),
 ]

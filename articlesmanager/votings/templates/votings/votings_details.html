@@ -67,14 +67,16 @@
                 <div>
                     <a href="{% url 'votings' %}" class="btn btn-outline-primary">Назад</a>
                 </div>
-                <div class="d-flex gap-3">
-                    <div>
-                        <a href="{{ voting.get_agreed_url }}" class="btn btn-primary">За публикацию</a>
+                {% if enable_to_vote %}
+                    <div class="d-flex gap-3">
+                        <div>
+                            <a href="{{ voting.get_agreed_url }}" class="btn btn-primary">За публикацию</a>
+                        </div>
+                        <div>
+                            <a href="{{ voting.get_disagreed_url }}" class="btn btn-danger">Против публикации</a>
+                        </div>
                     </div>
-                    <div>
-                        <a href="{{ voting.get_disagreed_url }}" class="btn btn-danger">Против публикации</a>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
