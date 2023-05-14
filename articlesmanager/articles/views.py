@@ -12,6 +12,7 @@ from users.models import CustomUser
 from states.models import State
 from .forms import ArticlesForm
 from notifications.models import Notification
+from notifications.utils import create_reviewer_notification
 import json
 
 class ArticlesList(LoginRequiredMixin, ListView):
@@ -156,10 +157,11 @@ def add_user_to_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
     article.users.add(user)
-    # Notification.objects.create(
-    #     user=user,
-    #     subject=Notification.SUBJECT_CHOICES
-    # )
+    Notification.objects.create(
+        user=user,
+        subject=Notification.NotificationsSubjects.REVIEWER,
+        content=create_reviewer_notification(article),
+    )
     return HttpResponseRedirect(article.get_update_url())
 
 
