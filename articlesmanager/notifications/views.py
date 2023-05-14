@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.utils import timezone
@@ -15,3 +16,24 @@ class NotificationsList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+
+class NotificationsDetail(LoginRequiredMixin, DetailView):
+    template_name = 'notifications/notifications_detail.html'
+    model = Notification
+    context_object_name = 'notification'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+
+def mark_as_checked(request, pk):
+    notification = get_object_or_404(Notification, pk=pk)
+    notification.checked = True
+    notification.save()
+    return HttpResponseRedirect(notification.get_detail_url())
+
+
+class NotificationsDelete(LoginRequiredMixin, DeleteView):
+    model = Notification
+    success_url = reverse_lazy('notifications')

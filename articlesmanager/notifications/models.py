@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from users.models import CustomUser
 from articles.models import Article
@@ -25,18 +26,24 @@ class Notification(models.Model):
     )
 
     class NotificationsSubjects(models.TextChoices):
-        ARTICLE_REPUBLISHED = "ARTICLE_REPUBLISHED", _("Внесены правки в статью")
-        REVIEWER = "REVIEWER", _("Вы назначены рецензентом")
-        VOTING = "VOTING", _("Началось голосование")
-    #     SENIOR = "SR", _("Senior")
-    #     GRADUATE = "GR", _("Graduate")
-    # SUBJECT_CHOICES = (
-    #     ("ARTICLE_REPUBLISHED", "Внесены правки в статью"),
-    #     ("REVIEWER", "Вы назначены рецензентом"),
-    #     ("VOTING", "Началось голосование"),
-    # )
+        ARTICLE_REPUBLISHED = "Внесены правки в статью", _("Внесены правки в статью")
+        REVIEWER = "Вы назначены рецензентом", _("Вы назначены рецензентом")
+        VOTING = "Назначено голосование", _("Назначено голосование")
+
     subject = models.CharField(choices=NotificationsSubjects.choices, verbose_name='Тема', null=True)
     content = models.TextField(verbose_name='Содержание', null=True)
     checked = models.BooleanField(default=False, verbose_name='Просмотрено')
     date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+
+    def get_detail_url(self):
+        return reverse('detail_notifications', kwargs={'pk': self.pk})
+
+    def get_checked_url(self):
+        return reverse('mark_as_checked', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse('delete_notifications', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = ['checked', '-date_created']
 

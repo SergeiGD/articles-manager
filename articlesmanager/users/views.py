@@ -56,7 +56,9 @@ class UsersUpdate(PermissionRequiredMixin, UpdateView):
     model = CustomUser
     context_object_name = 'user'
     form_class = UpdateUserForm
-    success_url = reverse_lazy('users')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
@@ -122,7 +124,9 @@ class PositionsUpdate(PermissionRequiredMixin, UpdateView):
     model = Position
     context_object_name = 'position'
     form_class = PositionForm
-    success_url = reverse_lazy('positions')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return Position.objects.filter(date_deleted=None)

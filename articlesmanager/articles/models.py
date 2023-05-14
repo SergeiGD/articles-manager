@@ -54,7 +54,7 @@ class Article(models.Model):
     date_repulished = models.DateTimeField(default=timezone.now, verbose_name='Дата внесения правок')
 
     class Meta:
-        ordering = ['-date_repulished']
+        ordering = ['-date_created']
 
     def get_current_state(self):
         return self.states.filter(
