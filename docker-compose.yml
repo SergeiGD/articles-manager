@@ -20,7 +20,7 @@ services:
       - ./.env
 
   db:
-    image: postgres:15.1-alpine3.16
+    image: postgres:latest
     container_name: articles_db
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
@@ -32,5 +32,3 @@ services:
       - ${DB_PORT}:5432
     env_file:
       - ./.env
-
-
