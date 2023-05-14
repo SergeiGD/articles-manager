@@ -70,6 +70,7 @@ class Article(models.Model):
         return self.reviews.filter(
             date_created__gt=self.date_repulished,
             approved=True,
+            user__in=self.users.all(),
         ).count()
 
     @property
@@ -77,6 +78,7 @@ class Article(models.Model):
         return self.reviews.filter(
             date_created__gt=self.date_repulished,
             approved=False,
+            user__in=self.users.all(),
         ).count()
 
     @property

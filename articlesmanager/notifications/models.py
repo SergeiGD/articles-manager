@@ -5,20 +5,12 @@ from articles.models import Article
 from votings.models import Voting
 
 
+
 class Notification(models.Model):
     user = models.ForeignKey(
         to=CustomUser,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
-        related_name='notifications',
-        related_query_name='notification'
-    )
-    voting = models.ForeignKey(
-        to=Voting,
-        on_delete=models.CASCADE,
-        verbose_name='Голосование',
-        null=True,
-        blank=True,
         related_name='notifications',
         related_query_name='notification'
     )
@@ -31,4 +23,13 @@ class Notification(models.Model):
         related_name='notifications',
         related_query_name='notification'
     )
+    SUBJECT_CHOICES = (
+        ("ARTICLE_REPUBLISHED", "Внесены правки в статью"),
+        ("REVIEWER", "Вы назначены рецензентом"),
+        ("VOTING", "Началось голосование"),
+    )
+    subject = models.CharField(choices=SUBJECT_CHOICES, verbose_name='Тема', null=True)
+    content = models.TextField(verbose_name='Содержание', null=True)
+    checked = models.BooleanField(default=False, verbose_name='Просмотрено')
     date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+

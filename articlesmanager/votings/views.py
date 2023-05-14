@@ -63,6 +63,8 @@ class VotingsDetail(DetailView):
                 context['current_vote'] = 'Против'
         else:
             context['current_vote'] = 'Нет голоса'
+        enable_to_vote = self.object.date_start < timezone.now() < self.object.date_end
+        context['enable_to_vote'] = enable_to_vote
         return context
 
 

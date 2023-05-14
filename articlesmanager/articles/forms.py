@@ -14,6 +14,7 @@ class ArticlesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['current_state'].choices = self.STATUS_CHOICES
 
         if self.instance is not None and self.instance.id is not None:
             self.initial['current_state'] = self.instance.get_current_state().id
