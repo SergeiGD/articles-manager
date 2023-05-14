@@ -11,7 +11,10 @@ services:
     restart: on-failure
     ports:
       - "8000:8000"
+      - "466:465"
     depends_on:
+      - db
+    links:
       - db
     env_file:
       - ./.env
@@ -20,7 +23,7 @@ services:
     image: postgres:latest
     container_name: articles_db
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data:z
+      - ./postgres_data:/var/lib/postgresql/data/
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
