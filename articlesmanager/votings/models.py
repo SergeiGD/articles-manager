@@ -70,3 +70,6 @@ class Voting(models.Model):
 
     def get_detail_url(self):
         return reverse('votings_detail', kwargs={'pk': self.pk})
+
+    def get_update_url(self):
+        return reverse('votings_update', kwargs={'pk': self.pk})

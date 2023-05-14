@@ -33,7 +33,9 @@ class StatesUpdate(PermissionRequiredMixin, UpdateView):
     model = State
     context_object_name = 'state'
     form_class = StatesForm
-    success_url = reverse_lazy('states')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return State.objects.filter(date_deleted=None)

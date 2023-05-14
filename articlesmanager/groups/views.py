@@ -34,7 +34,9 @@ class GroupsUpdate(PermissionRequiredMixin, UpdateView):
     model = UserGroup
     context_object_name = 'group'
     form_class = GroupsForm
-    success_url = reverse_lazy('groups')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
 
 class GroupsDetail(PermissionRequiredMixin, DetailView):

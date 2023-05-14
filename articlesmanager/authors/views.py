@@ -43,7 +43,9 @@ class AuthorsUpdate(PermissionRequiredMixin, UpdateView):
     model = Author
     context_object_name = 'author'
     form_class = AuthorsForm
-    success_url = reverse_lazy('authors')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return Author.objects.filter(date_deleted=None)

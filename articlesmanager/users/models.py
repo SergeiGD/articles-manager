@@ -28,6 +28,9 @@ class CustomUser(AbstractUser):
     date_edited = models.DateTimeField(null=True, blank=True, verbose_name='Дата изменения')
     date_deleted = models.DateTimeField(null=True, blank=True, verbose_name='Дата удаления')
 
+    def get_notifications_count(self):
+        return self.notifications.filter(checked=False).count()
+
     def get_articles_to_review(self):
         result = []
         user_articles = self.articles.filter(

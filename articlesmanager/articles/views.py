@@ -12,7 +12,7 @@ from users.models import CustomUser
 from states.models import State
 from .forms import ArticlesForm
 from notifications.models import Notification
-from notifications.utils import create_reviewer_notification
+from notifications.utils import create_reviewer_notification, create_republished_notification
 import json
 
 class ArticlesList(LoginRequiredMixin, ListView):
@@ -89,6 +89,11 @@ def mark_as_republished(request, pk):
     article = Article.objects.get(pk=pk)
     article.date_repulished = timezone.now()
     article.save()
+    Notification.objects.create(
+        user=user,
+        subject=Notification.NotificationsSubjects.ARTICLE_REPUBLISHED,
+        content=create_republished_notification(article),
+    )
     return HttpResponseRedirect(article.get_show_url())
 
 
