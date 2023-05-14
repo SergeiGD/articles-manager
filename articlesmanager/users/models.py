@@ -74,6 +74,9 @@ class CustomUser(AbstractUser):
     def get_reset_password_url(self):
         return reverse('reset_user_password', kwargs={'pk': self.pk})
 
+    class Meta:
+        ordering = ['-date_created']
+
 
 class Position(models.Model):
     name = models.CharField(max_length=255, verbose_name='Наименование')
@@ -92,6 +95,9 @@ class Position(models.Model):
 
     def get_detail_url(self):
         return reverse('detail_positions', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = ['-date_created']
 
 
 @receiver(pre_save, sender=CustomUser)

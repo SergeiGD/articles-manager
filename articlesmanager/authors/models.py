@@ -23,6 +23,9 @@ class Author(models.Model):
     def get_delete_url(self):
         return reverse('delete_authors', kwargs={'pk': self.pk})
 
+    class Meta:
+        ordering = ['-date_created']
+
 
 @receiver(pre_save, sender=Author)
 def author_pre_save(sender, instance, **kwargs):
