@@ -27,15 +27,19 @@
                 <div>
                     <a href="{% url 'groups' %}" class="btn btn-outline-primary">К списку групп</a>
                 </div>
+                {% if 'groups.change_group' in perms %}
                 <div>
                     <a href="{{ group.get_update_url }}" class="btn btn-warning">Изменить</a>
                 </div>
+                {% endif %}
+                {% if 'groups.delete_group' in perms %}
                 <div>
                     <form action="{{ group.get_delete_url }}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
 
         </div>

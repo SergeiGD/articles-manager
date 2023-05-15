@@ -4,14 +4,21 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
+from django.core.validators import RegexValidator
 from .managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
     username = None
-    first_name = models.CharField(max_length=255, verbose_name='Имя')
-    last_name = models.CharField(max_length=255, verbose_name='Фамилия')
-    middle_name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Отчество')
+    first_name = models.CharField(max_length=50, verbose_name='Имя', validators=[
+        RegexValidator('^([^0-9]*)$')
+    ])
+    last_name = models.CharField(max_length=50, verbose_name='Фамилия', validators=[
+        RegexValidator('^([^0-9]*)$')
+    ])
+    middle_name = models.CharField(max_length=50, null=True, blank=True, verbose_name='Отчество', validators=[
+        RegexValidator('^([^0-9]*)$')
+    ])
     email = models.EmailField(
         verbose_name='Эл. почта',
         unique=True

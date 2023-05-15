@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import password_validation
+
 from .models import CustomUser, Position
 
 
@@ -7,7 +9,7 @@ class CreateUsersForm(forms.ModelForm):
         model = CustomUser
         fields = ['first_name', 'last_name', 'middle_name', 'position', 'email', 'password', ]
 
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,6 +18,11 @@ class CreateUsersForm(forms.ModelForm):
             self.fields[str(field)].widget.attrs.update({'class': 'form-control'})
 
         self.fields['password'].label = 'Пароль'
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        password_validation.validate_password(password)
+        return password
 
 
 
@@ -36,13 +43,18 @@ class ResetPasswordForm(forms.ModelForm):
         model = CustomUser
         fields = ['password', ]
 
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['password'].label = 'Новый пароль'
         self.fields['password'].widget.attrs.update({'class': 'form-control'})
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        password_validation.validate_password(password)
+        return password
 
 
 class PositionForm(forms.ModelForm):

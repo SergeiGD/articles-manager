@@ -53,7 +53,6 @@ class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         state = State.objects.get(pk=state_id)
         form.instance.save()
         form.instance.states.add(state)
-        form.instance.users.add(self.request.user)
         return HttpResponseRedirect(redirect_to=reverse_lazy('articles'))
 
     def form_invalid(self, form):

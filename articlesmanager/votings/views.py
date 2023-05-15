@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -50,7 +50,8 @@ class VotingsCreate(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
 
 
-class VotingsUpdate(UpdateView):
+class VotingsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ['change_voting', ]
     template_name = 'votings/votings_update.html'
     model = Voting
     context_object_name = 'voting'

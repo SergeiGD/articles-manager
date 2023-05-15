@@ -1,3 +1,5 @@
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
@@ -96,6 +98,8 @@ def reset_user_password(request, pk):
             )
             email.send()
             return HttpResponseRedirect(user.get_detail_url())
+
+        return render(request, 'users/reset_password.html', {'form': form, 'user': user})
 
 
 class PositionsList(LoginRequiredMixin, ListView):

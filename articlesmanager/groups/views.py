@@ -10,8 +10,7 @@ from .forms import GroupsForm
 from users.models import CustomUser
 
 
-class GroupsList(PermissionRequiredMixin, ListView):
-    permission_required = ('view_usergroup', )
+class GroupsList(LoginRequiredMixin, ListView):
     template_name = 'groups/groups_list.html'
     model = UserGroup
     context_object_name = 'groups'
@@ -39,8 +38,7 @@ class GroupsUpdate(PermissionRequiredMixin, UpdateView):
         return self.object.get_detail_url()
 
 
-class GroupsDetail(PermissionRequiredMixin, DetailView):
-    permission_required = ('view_usergroup',)
+class GroupsDetail(LoginRequiredMixin, DetailView):
     template_name = 'groups/groups_detai.html'
     model = UserGroup
     context_object_name = 'group'
@@ -53,7 +51,7 @@ class GroupsDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SelectPermissionsList(PermissionRequiredMixin, ListView):
-    permission_required = ('view_usergroup',)
+    permission_required = ('change_usergroup',)
     template_name = 'groups/add_permission_to_group.html'
     model = GroupPermission
     context_object_name = 'permissions'

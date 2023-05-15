@@ -68,9 +68,12 @@
                 <div>
                     <a href="{% url 'votings' %}" class="btn btn-outline-primary">К списку голосований</a>
                 </div>
-                <div>
-                    <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
-                </div>
+
+                {% if 'votings.change_voting' in perms %}
+                    <div>
+                        <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
+                    </div>
+                {% endif %}
 
                 {% if enable_to_vote %}
                     <div class="d-flex gap-3">

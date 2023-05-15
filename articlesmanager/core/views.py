@@ -9,10 +9,10 @@ class CustomLoginView(LoginView):
     template_name = 'core/login.html'
     form_class = LoginForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('articles')
+    success_url = reverse_lazy('notifications')
 
     def get_success_url(self):
-        return reverse_lazy('articles')
+        return reverse_lazy('notifications')
 
 
 def logout_view(request):
