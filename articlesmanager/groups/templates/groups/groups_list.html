@@ -12,7 +12,9 @@
     <div class="card mx-auto m-3">
         <div class="card-body">
             <div class=" mb-3">
-                <a href="{% url 'create_groups' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
+                {% if 'groups.add_group' in perms %}
+                    <a href="{% url 'create_groups' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
+                {% endif %}
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>

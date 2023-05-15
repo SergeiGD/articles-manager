@@ -67,20 +67,29 @@
                     <div>
                         <a href="{% url 'articles' %}" class="btn btn-outline-primary">К списку статей</a>
                     </div>
+                    {% if 'articles.change_article' in perms %}
+
+                    {% endif %}
                     <div>
                         <a href="{{ article.get_update_url }}" class="btn btn-warning">Изменить</a>
                     </div>
 
+                    {% if 'articles.change_article' in perms %}
                     <div>
                         <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
                     </div>
+                    {% endif %}
 
-                    <div>
-                        <form action="{{ article.get_delete_url }}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Удалить</button>
-                        </form>
-                    </div>
+
+                    {% if 'articles.delete_article' in perms %}
+                        <div>
+                            <form action="{{ article.get_delete_url }}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Удалить</button>
+                            </form>
+                        </div>
+                    {% endif %}
+
                 </div>
 
                 <div class="d-flex gap-3">

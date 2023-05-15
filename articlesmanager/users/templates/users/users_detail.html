@@ -37,22 +37,28 @@
                 <a href="{{ user.position.get_detail_url }}">{{ user.position.name }}</a>
             </div>
 
-             <div class="d-flex gap-3 mt-3">
+            <div class="d-flex gap-3 mt-3">
                 <div>
                     <a href="{% url 'users' %}" class="btn btn-outline-primary">К списку пользователей</a>
                 </div>
-                <div>
-                    <a href="{{ user.get_update_url }}" class="btn btn-warning">Изменить</a>
-                </div>
-                 <div>
-                    <a href="{{ user.get_reset_password_url }}" class="btn btn-info">Сбросить пароль</a>
-                </div>
+                {% if 'users.change_customuser' in perms %}
+                    <div>
+                        <a href="{{ user.get_update_url }}" class="btn btn-warning">Изменить</a>
+                    </div>
+                {% endif %}
+                {% if 'users.change_customuser' in perms %}
+                    <div>
+                        <a href="{{ user.get_reset_password_url }}" class="btn btn-info">Сбросить пароль</a>
+                    </div>
+                {% endif %}
+                {% if 'users.delete_customuser' in perms %}
                 <div>
                     <form action="{{ user.get_delete_url }}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
 
         </div>
