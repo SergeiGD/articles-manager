@@ -27,10 +27,10 @@
                 {% for author in authors %}
                     <tr>
                         <th scope="row">{{ author.pk }}</th>
-                        <td>{{ author.last_name }}</td>
-                        <td>{{ author.first_name }}</td>
-                        <td>{{ author.middle_name }}</td>
-                        <td>{{ author.email }}</td>
+                        <td>{{ author.last_name|truncatechars:30 }}</td>
+                        <td>{{ author.first_name|truncatechars:30 }}</td>
+                        <td>{{ author.middle_name|truncatechars:30 }}</td>
+                        <td>{{ author.email|truncatechars:30 }}</td>
                         <td>
                             <form method="post"
                                   action="{% url 'add_author_to_article' pk=article.pk author_id=author.pk %}">

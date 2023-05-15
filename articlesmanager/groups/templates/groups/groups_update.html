@@ -97,10 +97,10 @@
                 {% for user in group.user_set.all %}
                     <tr>
                         <th scope="row">{{ user.pk }}</th>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.middle_name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ user.last_name|truncatechars:30 }}</td>
+                        <td>{{ user.first_name|truncatechars:30 }}</td>
+                        <td>{{ user.middle_name|truncatechars:30 }}</td>
+                        <td>{{ user.email|truncatechars:30 }}</td>
                         <td>
                             <form method="post"
                                   action="{% url 'remove_user_from_group' pk=group.pk user_id=user.id %}">

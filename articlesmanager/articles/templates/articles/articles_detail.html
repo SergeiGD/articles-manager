@@ -22,7 +22,7 @@
                     </div>
                     <div class="div">
                         <span class="fs-5">Файл: </span>
-                        <a href="{{ article.get_download_url }}" download >{{ article.file }}</a>
+                        <a href="{{ article.get_download_url }}" download>{{ article.file }}</a>
                     </div>
                 </div>
 
@@ -40,8 +40,17 @@
             </div>
 
             <div class="mt-3">
-                <span class="fs-5">Библиография: </span>
-                <span class="fs-5">{{ article.bibliography|linebreaks }}</span>
+                <p>
+                    <a class="fs-5" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                       aria-expanded="false" aria-controls="collapseExample">
+                        Библиография...
+                    </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="fs-5">
+                        {{ article.bibliography|linebreaks }}
+                    </div>
+                </div>
             </div>
             <div class="mt-3">
                 <span class="fs-5">Статус: </span>
@@ -52,11 +61,11 @@
                 <div class="mt-3">
                     <span class="fs-5">Положительных рецензий: </span>
                     <span class="fs-5">{{ article.count_approved }}</span>
-                    </div>
+                </div>
 
-                    <div class="mt-3">
-                        <span class="fs-5">Отрицательных рецензий: </span>
-                        <span class="fs-5">{{ article.count_unapproved }}</span>
+                <div class="mt-3">
+                    <span class="fs-5">Отрицательных рецензий: </span>
+                    <span class="fs-5">{{ article.count_unapproved }}</span>
                 </div>
             {% endif %}
 
@@ -75,9 +84,9 @@
                     </div>
 
                     {% if 'articles.change_article' in perms %}
-                    <div>
-                        <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
-                    </div>
+                        <div>
+                            <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
+                        </div>
                     {% endif %}
 
 
@@ -95,13 +104,15 @@
                 <div class="d-flex gap-3">
                     {% if can_create_review %}
                         <div>
-                            <a href="{{ article.get_create_review_url }}" class="btn btn-outline-primary">Создать рецензию</a>
+                            <a href="{{ article.get_create_review_url }}" class="btn btn-outline-primary">Создать
+                                рецензию</a>
                         </div>
                     {% endif %}
 
-                    {% if article.is_ready_to_votings and not article.votings.exists  %}
+                    {% if article.is_ready_to_votings and not article.votings.exists %}
                         <div>
-                            <a href="{{ article.get_create_voting_url }}" class="btn btn-outline-primary">Создать голосование</a>
+                            <a href="{{ article.get_create_voting_url }}" class="btn btn-outline-primary">Создать
+                                голосование</a>
                         </div>
                     {% endif %}
 
@@ -131,10 +142,10 @@
                 {% for author in article.authors.all %}
                     <tr>
                         <th scope="row">{{ author.pk }}</th>
-                        <td>{{ author.last_name }}</td>
-                        <td>{{ author.first_name }}</td>
-                        <td>{{ author.middle_name }}</td>
-                        <td>{{ author.email }}</td>
+                        <td>{{ author.last_name|truncatechars:30 }}</td>
+                        <td>{{ author.first_name|truncatechars:30 }}</td>
+                        <td>{{ author.middle_name|truncatechars:30 }}</td>
+                        <td>{{ author.email|truncatechars:30 }}</td>
                         <td>
                             <a href="{{ author.get_detail_url }}" class="btn btn-primary">Просмотр</a>
                         </td>
@@ -163,10 +174,10 @@
                 {% for user in article.users.all %}
                     <tr>
                         <th scope="row">{{ user.pk }}</th>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.middle_name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ user.last_name|truncatechars:30 }}</td>
+                        <td>{{ user.first_name|truncatechars:30 }}</td>
+                        <td>{{ user.middle_name|truncatechars:30 }}</td>
+                        <td>{{ user.email|truncatechars:30 }}</td>
                         <td>
                             <a href="{{ user.get_detail_url }}" class="btn btn-primary">Просмотр</a>
                         </td>
@@ -195,7 +206,7 @@
                         <th scope="row">{{ review.pk }}</th>
                         <td>{{ review.date_created }}</td>
                         <td>
-                            {% if review.approved  %}
+                            {% if review.approved %}
                                 Да
                             {% else %}
                                 Нет

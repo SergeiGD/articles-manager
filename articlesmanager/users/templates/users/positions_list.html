@@ -26,7 +26,7 @@
                 {% for position in positions %}
                     <tr>
                         <th scope="row">{{ position.pk }}</th>
-                        <td>{{ position.name }}</td>
+                        <td>{{ position.name|truncatechars:30  }}</td>
                         <td>
                             <a href="{{ position.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
                         </td>

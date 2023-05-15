@@ -30,10 +30,10 @@
                 {% for user in users %}
                     <tr>
                         <th scope="row">{{ user.pk }}</th>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.middle_name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ user.first_name|truncatechars:30 }}</td>
+                        <td>{{ user.last_name|truncatechars:30 }}</td>
+                        <td>{{ user.middle_name|truncatechars:30 }}</td>
+                        <td>{{ user.email|truncatechars:30 }}</td>
                         <td>{{ user.position }}</td>
                         <td>
                             <a href="{{ user.get_detail_url }}" class="btn btn-primary flex">Просмотреть</a>
