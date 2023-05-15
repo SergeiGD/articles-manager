@@ -142,10 +142,10 @@
                 {% for author in article.authors.all %}
                     <tr>
                         <th scope="row">{{ author.pk }}</th>
-                        <td>{{ author.last_name }}</td>
-                        <td>{{ author.first_name }}</td>
-                        <td>{{ author.middle_name }}</td>
-                        <td>{{ author.email }}</td>
+                        <td>{{ author.last_name|truncatechars:30 }}</td>
+                        <td>{{ author.first_name|truncatechars:30 }}</td>
+                        <td>{{ author.middle_name|truncatechars:30 }}</td>
+                        <td>{{ author.email|truncatechars:30 }}</td>
                         <td>
                             <a href="{{ author.get_detail_url }}" class="btn btn-primary">Просмотр</a>
                         </td>
@@ -174,10 +174,10 @@
                 {% for user in article.users.all %}
                     <tr>
                         <th scope="row">{{ user.pk }}</th>
-                        <td>{{ user.last_name }}</td>
-                        <td>{{ user.first_name }}</td>
-                        <td>{{ user.middle_name }}</td>
-                        <td>{{ user.email }}</td>
+                        <td>{{ user.last_name|truncatechars:30 }}</td>
+                        <td>{{ user.first_name|truncatechars:30 }}</td>
+                        <td>{{ user.middle_name|truncatechars:30 }}</td>
+                        <td>{{ user.email|truncatechars:30 }}</td>
                         <td>
                             <a href="{{ user.get_detail_url }}" class="btn btn-primary">Просмотр</a>
                         </td>

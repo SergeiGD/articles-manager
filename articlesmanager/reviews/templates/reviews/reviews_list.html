@@ -23,7 +23,7 @@
                 {% for article in articles %}
                     <tr>
                         <th scope="row">{{ article.pk }}</th>
-                        <td>{{ article.name }}</td>
+                        <td>{{ article.name|truncatechars:30  }}</td>
                         <td>
                             <a href="{{ article.get_show_url }}" class="btn btn-primary">Просмотреть</a>
                         </td>

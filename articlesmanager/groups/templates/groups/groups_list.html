@@ -28,7 +28,7 @@
                     {% for group in groups %}
                         <tr>
                             <th scope="row">{{ group.pk }}</th>
-                            <td>{{ group.name }}</td>
+                            <td>{{ group.name|truncatechars:30  }}</td>
                             <td>
                                 <a href="{{ group.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
                             </td>

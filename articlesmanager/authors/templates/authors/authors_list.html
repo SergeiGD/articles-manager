@@ -29,10 +29,10 @@
                 {% for author in authors %}
                     <tr>
                         <th scope="row">{{ author.pk }}</th>
-                        <td>{{ author.last_name }}</td>
-                        <td>{{ author.first_name }}</td>
-                        <td>{{ author.middle_name }}</td>
-                        <td>{{ author.email }}</td>
+                        <td>{{ author.last_name|truncatechars:30 }}</td>
+                        <td>{{ author.first_name|truncatechars:30 }}</td>
+                        <td>{{ author.middle_name|truncatechars:30 }}</td>
+                        <td>{{ author.email|truncatechars:30 }}</td>
                         <td>
                             <a href="{{ author.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
                         </td>
