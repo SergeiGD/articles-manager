@@ -3,14 +3,30 @@
 {% load static %}
 
 {% block header_meta %}
-    <title>Создать статус статьи</title>
+    <title>Создать группу</title>
 {% endblock header_meta %}
 
 {% block content %}
 
-    <legend class="text-center"> Создать статус статьи</legend>
+    <legend class="text-center"> Создать группу</legend>
     <div class="card">
         <form class="card-body" action="." method="POST">
+
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ field.label|escape }}:</strong>
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
 
             {% csrf_token %}
 

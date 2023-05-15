@@ -10,63 +10,71 @@
 
     <legend class="text-center"> Голосование №4</legend>
     <div class="card">
-        <div class="card-body row">
+    <div class="card-body row">
 
-            <div class="col-12">
-                <span class="fs-5">Наименование статьи: </span>
-                <span class="fs-5">{{ voting.article.name }}</span>
-            </div>
+        <div class="col-12">
+            <span class="fs-5">Наименование статьи: </span>
+            <span class="fs-5">{{ voting.article.name }}</span>
+        </div>
 
-            <div class="col-12">
-                <span class="fs-5">Скачать статью: </span>
-                <a href="{{ voting.article.get_download_url }}" download>{{ voting.article.file }}</a>
-            </div>
+        <div class="col-12">
+            <span class="fs-5">Скачать статью: </span>
+            <a href="{{ voting.article.get_download_url }}" download>{{ voting.article.file }}</a>
+        </div>
 
+        <div class="col-6">
+            <span class="fs-5">Оригинальность: </span>
+            <span class="fs-5">{{ voting.article.unique }}</span>
+        </div>
+
+        <div class="col-6">
+            <span class="fs-5">Степень цитирования: </span>
+            <span class="fs-5">{{ voting.article.quoting }}</span>
+        </div>
+
+        <div class="col-6">
+            <span class="fs-5">Дата начала голосования: </span>
+            <span class="fs-5">{{ voting.date_start }}</span>
+        </div>
+
+        <div class="col-6">
+            <span class="fs-5">Дата конца голосования: </span>
+            <span class="fs-5">{{ voting.date_end }}</span>
+        </div>
+
+        <div class="col-12">
+            <span class="fs-5">Библиография: </span>
+            <span class="fs-5">{{ voting.article.bibliography|linebreaks }}</span>
+        </div>
+
+        <div class="col-12 mt-3 row">
             <div class="col-6">
-                <span class="fs-5">Оригинальность: </span>
-                <span class="fs-5">{{ voting.article.unique }}</span>
+                <span class="fs-5">Голосов за: </span>
+                <span class="fs-5">{{ voting.count_agreed }}</span>
             </div>
-
-            <div class="col-6">
-                <span class="fs-5">Степень цитирования: </span>
-                <span class="fs-5">{{ voting.article.quoting }}</span>
+            <div class="col-6 ">
+                <span class="fs-5">Голосов против: </span>
+                <span class="fs-5">{{ voting.count_disagreed }}</span>
             </div>
+        </div>
 
-            <div class="col-6">
-                <span class="fs-5">Дата начала голосования: </span>
-                <span class="fs-5">{{ voting.date_start }}</span>
-            </div>
+        <div class="col-12">
+            <span class="fs-5">Ваш текущий голос: </span>
+            <span class="fs-5">{{ current_vote }}</span>
+        </div>
 
-            <div class="col-6">
-                <span class="fs-5">Дата конца голосования: </span>
-                <span class="fs-5">{{ voting.date_end }}</span>
-            </div>
-
-            <div class="col-12">
-                <span class="fs-5">Библиография: </span>
-                <span class="fs-5">{{ voting.article.bibliography|linebreaks }}</span>
-            </div>
-
-            <div class="col-12 mt-3 row">
-                <div class="col-6">
-                    <span class="fs-5">Голосов за: </span>
-                    <span class="fs-5">{{ voting.count_agreed }}</span>
-                </div>
-                <div class="col-6 ">
-                    <span class="fs-5">Голосов против: </span>
-                    <span class="fs-5">{{ voting.count_disagreed }}</span>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <span class="fs-5">Ваш текущий голос: </span>
-                <span class="fs-5">{{ current_vote }}</span>
-            </div>
-
-            <div class="d-flex justify-content-between mt-2">
+        <div class="d-flex justify-content-between mt-2">
+            <div class="d-flex gap-3 mt-3">
                 <div>
-                    <a href="{% url 'votings' %}" class="btn btn-outline-primary">Назад</a>
+                    <a href="{% url 'votings' %}" class="btn btn-outline-primary">К списку голосований</a>
                 </div>
+
+                {% if 'votings.change_voting' in perms %}
+                    <div>
+                        <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
+                    </div>
+                {% endif %}
+
                 {% if enable_to_vote %}
                     <div class="d-flex gap-3">
                         <div>

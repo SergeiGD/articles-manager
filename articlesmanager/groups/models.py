@@ -21,8 +21,10 @@ class UserGroup(Group):
 
     class Meta:
         proxy = True
+        ordering = ['-id', ]
 
 
 class GroupPermission(Permission):
     class Meta:
         proxy = True
+        ordering = ['-id', ]

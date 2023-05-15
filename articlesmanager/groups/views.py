@@ -10,8 +10,7 @@ from .forms import GroupsForm
 from users.models import CustomUser
 
 
-class GroupsList(PermissionRequiredMixin, ListView):
-    permission_required = ('view_usergroup', )
+class GroupsList(LoginRequiredMixin, ListView):
     template_name = 'groups/groups_list.html'
     model = UserGroup
     context_object_name = 'groups'
@@ -34,11 +33,12 @@ class GroupsUpdate(PermissionRequiredMixin, UpdateView):
     model = UserGroup
     context_object_name = 'group'
     form_class = GroupsForm
-    success_url = reverse_lazy('groups')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
 
-class GroupsDetail(PermissionRequiredMixin, DetailView):
-    permission_required = ('view_usergroup',)
+class GroupsDetail(LoginRequiredMixin, DetailView):
     template_name = 'groups/groups_detai.html'
     model = UserGroup
     context_object_name = 'group'
@@ -51,7 +51,7 @@ class GroupsDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SelectPermissionsList(PermissionRequiredMixin, ListView):
-    permission_required = ('view_usergroup',)
+    permission_required = ('change_usergroup',)
     template_name = 'groups/add_permission_to_group.html'
     model = GroupPermission
     context_object_name = 'permissions'
@@ -83,7 +83,7 @@ def remove_permission_from_group(request, pk, permission_id):
 
 
 class SelectUsersList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_usergroup',)
+    permission_required = ('change_usergroup', 'change_customuser')
     template_name = 'groups/add_users_to_group.html'
     model = CustomUser
     context_object_name = 'users'
@@ -100,7 +100,7 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
         return context
 
 
-@permission_required('change_usergroup')
+@permission_required('change_usergroup', 'change_customuser')
 def add_user_to_group(request, pk, user_id):
     group = UserGroup.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -108,7 +108,7 @@ def add_user_to_group(request, pk, user_id):
     return HttpResponseRedirect(group.get_update_url())
 
 
-@permission_required('change_usergroup')
+@permission_required('change_usergroup', 'change_customuser')
 def remove_user_from_group(request, pk, user_id):
     group = UserGroup.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)

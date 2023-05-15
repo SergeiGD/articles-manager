@@ -48,10 +48,12 @@
         <li><a href="{% url 'reviews' %}" class="nav-link px-2">Рецензии</a></li>
         <li><a href="{% url 'users' %}" class="nav-link px-2">Пользователи</a></li>
         <li><a href="{% url 'groups' %}" class="nav-link px-2">Группы</a></li>
+        <li><a href="{% url 'positions' %}" class="nav-link px-2">Должности</a></li>
     </ul>
 
     <div class="col-4 text-end px-3">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" class="btn btn-outline-primary me-2">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button"
+           class="btn btn-outline-primary me-2">
             {{ request.user.first_name }} {{ request.user.last_name }}
         </a>
         <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
@@ -74,6 +76,10 @@
             <div class="modal-body">
                 <div class="card" id="detail">
                     <div class="card-body">
+                        <div class="mb-3">
+                            <a href="{% url 'notifications' %}" class="btn btn-outline-primary">У
+                                вас {{ request.user.get_notifications_count }} уведомлений</a>
+                        </div>
                         <div class="mb-3">
                             <label for="surname" class="form-label">Фамилия:</label>
                             <label for="surname" class="form-label">{{ request.user.last_name }}</label>

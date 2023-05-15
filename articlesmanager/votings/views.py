@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -6,9 +6,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
+
+from notifications.models import Notification
 from .models import Voting, VotingUsers
 from articles.models import Article
 from .forms import VotingForm
+from notifications.utils import create_voting_notification
 
 
 class VotingsList(LoginRequiredMixin, ListView):
@@ -35,17 +38,27 @@ class VotingsCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         article = context['article']
+        if article.votings.exists():
+            return HttpResponseRedirect(redirect_to=article.votings.first().get_detail_url())
         form.instance.article = article
         form.instance.save()
+        Notification.objects.create(
+            user=self.request.user,
+            subject=Notification.NotificationsSubjects.VOTING,
+            content=create_voting_notification(form.instance),
+        )
         return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
 
 
-class VotingsUpdate(UpdateView):
+class VotingsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ['change_voting', ]
     template_name = 'votings/votings_update.html'
     model = Voting
     context_object_name = 'voting'
     form_class = VotingForm
-    success_url = reverse_lazy('votings')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
 
 class VotingsDetail(DetailView):

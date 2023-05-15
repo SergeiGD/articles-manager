@@ -30,7 +30,7 @@
                         <span class="fs-5">{{ author.middle_name }}</span>
                     </div>
                     <div class="div">
-                        <span class="fs-5">Эл. почта": </span>
+                        <span class="fs-5">Эл. почта: </span>
                         <span class="fs-5">{{ author.email }}</span>
                     </div>
                 </div>
@@ -41,18 +41,55 @@
                 <div>
                     <a href="{% url 'authors' %}" class="btn btn-outline-primary">К списку авторов</a>
                 </div>
-                <div>
-                    <a href="{{ author.get_update_url }}" class="btn btn-warning">Изменить</a>
-                </div>
-                <div>
-                    <form action="{{ author.get_delete_url }}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Удалить</button>
-                    </form>
-                </div>
+                {% if 'authors.change_author' in perms %}
+                    <div>
+                        <a href="{{ author.get_update_url }}" class="btn btn-warning">Изменить</a>
+                    </div>
+                {% endif %}
+                {% if 'authors.delete_author' in perms %}
+                    <div>
+                        <form action="{{ author.get_delete_url }}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
 
         </div>
+    </div>
+
+    <legend class="text-center">Список статей автора</legend>
+    <div class="card overflow-auto">
+
+        <div class="card-body">
+            <table class="table table-striped table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Статья</th>
+                    <th scope="col">Статус статьи</th>
+                    <th scope="col">Дата обновления</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for article in author.articles.all %}
+                    <tr>
+                        <th scope="row">{{ article.pk }}</th>
+                        <td>{{ article.name }}</td>
+                        <td>{{ article.get_current_state.name }}</td>
+                        <td>{{ article.date_edited }}</td>
+                        <td>
+                            <a href="{{ article.get_show_url }}" class="btn btn-primary">Просмотреть</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
 {% endblock content %}

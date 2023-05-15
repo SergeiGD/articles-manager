@@ -27,15 +27,19 @@
                 <div>
                     <a href="{% url 'states' %}" class="btn btn-outline-primary">К списку статусов</a>
                 </div>
-                <div>
-                    <a href="{{ state.get_update_url }}" class="btn btn-warning">Изменить</a>
-                </div>
+                {% if 'states.change_state' in perms %}
+                    <div>
+                        <a href="{{ state.get_update_url }}" class="btn btn-warning">Изменить</a>
+                    </div>
+                {% endif %}
+                {% if 'states.delete_state' in perms %}
                 <div>
                     <form action="{{ state.get_delete_url }}" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </div>
+                {% endif %}
             </div>
 
         </div>
