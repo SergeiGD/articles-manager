@@ -89,7 +89,7 @@ def mark_as_republished(request, pk):
     article.date_repulished = timezone.now()
     article.save()
     Notification.objects.create(
-        user=user,
+        user=request.user,
         subject=Notification.NotificationsSubjects.ARTICLE_REPUBLISHED,
         content=create_republished_notification(article),
     )

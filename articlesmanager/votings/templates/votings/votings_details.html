@@ -13,8 +13,8 @@
     <div class="card-body row">
 
         <div class="col-12">
-            <span class="fs-5">Наименование статьи: </span>
-            <span class="fs-5">{{ voting.article.name }}</span>
+            <span class="fs-5">Статья: </span>
+            <a href="{{ voting.article.get_show_url  }}">{{ voting.article.name }}</a>
         </div>
 
         <div class="col-12">
