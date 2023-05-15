@@ -20,7 +20,11 @@ class ArticlesForm(forms.ModelForm):
             self.initial['current_state'] = self.instance.get_current_state().id
 
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['file'].widget.attrs.update({'class': 'form-control', 'is_initial': False})
+        self.fields['file'].widget.attrs.update({
+            'class': 'form-control',
+            'is_initial': False,
+            'accept': 'application/pdf, .doc, .docx'
+        })
         self.fields['file'].label = 'Файл'
         self.fields['unique'].widget.attrs.update({'class': 'metrics form-control'})
         self.fields['quoting'].widget.attrs.update({'class': 'metrics form-control'})

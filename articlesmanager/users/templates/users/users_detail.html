@@ -58,4 +58,30 @@
         </div>
     </div>
 
+    <legend class="text-center">Группы пользователя</legend>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group in user.groups.all %}
+                    <tr>
+                        <th scope="row">{{ group.pk }}</th>
+                        <td>{{ group.name }}</td>
+                        <td>
+                            <a href="{% url 'detail_groups' pk=group.pk %}" class="btn btn-primary">Просмотр</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 {% endblock content %}
