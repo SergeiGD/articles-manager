@@ -13,9 +13,33 @@
     {% endblock header_meta %}
 
 </head>
-
-<header class="d-flex justify-content-between">
-
+<nav class="navbar navbar-expand-lg navbar-light  ">
+    <div class="container-fluid">
+      <span class="navbar-brand"></span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+        <span></span>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="{% url 'articles' %}" class="nav-link">Статьи</a></li>
+            <li class="nav-item"><a href="{% url 'authors' %}" class="nav-link">Авторы</a></li>
+            <li class="nav-item"><a href="{% url 'states' %}" class="nav-link ">Статусы</a></li>
+            <li class="nav-item"><a href="{% url 'votings' %}" class="nav-link">Голосования</a></li>
+            <li class="nav-item"><a href="{% url 'reviews' %}" class="nav-link">Рецензии</a></li>
+            <li class="nav-item"><a href="{% url 'users' %}" class="nav-link ">Пользователи</a></li>
+            <li class="nav-item"><a href="{% url 'groups' %}" class="nav-link">Группы</a></li>
+        </ul>
+            <div>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" class="btn btn-outline-primary me-2">
+                    {{ request.user.first_name }} {{ request.user.last_name }}
+                </a>
+                <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
+            </div>
+      </div>
+    </div>
+</nav>
+<!--<header class="d-flex justify-content-between">
     <ul class="nav col-8 align-items-center mb-2 text-start">
         <li><a href="{% url 'articles' %}" class="nav-link px-2">Статьи</a></li>
         <li><a href="{% url 'authors' %}" class="nav-link px-2">Авторы</a></li>
@@ -33,8 +57,8 @@
         <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
     </div>
 
-</header>
-<hr/>
+</header>-->
+<hr class="mt-0"/>
 
 {% block content %}
 {% endblock content %}
