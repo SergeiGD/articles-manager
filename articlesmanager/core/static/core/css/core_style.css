@@ -6,7 +6,6 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
 /*ul li {
     display: inline-block;
     padding-right: 10px;
@@ -14,7 +13,38 @@ header {
     font-size: 20px;
     margin-top: 20px;
 }*/
-
+.table-wrap {
+    text-align: center;
+    display: inline-block;
+    background-color: #fff;
+    padding: 2rem 2rem;
+    color: #000;
+    overflow: auto;
+  }
+  
+  @media screen and (max-width: 640px) {
+    .table-wrap {
+      overflow-y: scroll;
+    }
+    .btn{
+      font-size:xx-small;
+    }
+  }
+  .table{
+    table-layout: fixed;
+  }
+  td{
+    word-wrap:break-word;
+  }
+  th{
+    word-wrap: break-word;
+  }
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    
+}
 #detail {
     width: 90%;
     margin: 0 auto; /* Added */
