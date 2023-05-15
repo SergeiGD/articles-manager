@@ -81,6 +81,9 @@ class CustomUser(AbstractUser):
     def get_reset_password_url(self):
         return reverse('reset_user_password', kwargs={'pk': self.pk})
 
+    def get_select_group_url(self):
+        return reverse('select_group_for_user', kwargs={'pk': self.pk})
+
     class Meta:
         ordering = ['-date_created']
 

@@ -62,4 +62,35 @@
         </form>
     </div>
 
+    <legend class="text-center">Группы пользователя</legend>
+    <div class="card">
+        <div class="card-body">
+            <a href="{{ user.get_select_group_url }}" class="btn btn-primary w-100">+ Добавить</a>
+            <table class="table table-striped table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group in user.groups.all %}
+                    <tr>
+                        <th scope="row">{{ group.pk }}</th>
+                        <td>{{ group.name }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{% url 'remove_group_from_user' pk=user.pk group_id=group.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit">Убрать</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 {% endblock content %}

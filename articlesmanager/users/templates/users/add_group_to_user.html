@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Добавить группу к пользователю</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Добавить группу к пользователю</legend>
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Опция</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <th scope="row">{{ group.pk }}</th>
+                        <td>{{ group.name }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{% url 'add_group_to_user' pk=user.pk group_id=group.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Добавить</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% include 'core/pagination.html' %}
+
+{% endblock content %}
+
+
