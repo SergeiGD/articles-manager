@@ -90,6 +90,10 @@ class Article(models.Model):
 
     @property
     def enable_for_votings(self):
+
+        if self.votings.exists():
+            return False
+
         if self.is_ready_to_votings:
             return True
 

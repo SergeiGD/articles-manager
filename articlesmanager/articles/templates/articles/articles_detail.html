@@ -110,9 +110,16 @@
                     {% endif %}
 
                     {% if article.is_ready_to_votings and not article.votings.exists %}
+
                         <div>
                             <a href="{{ article.get_create_voting_url }}" class="btn btn-outline-primary">Создать
                                 голосование</a>
+                        </div>
+                    {% endif %}
+
+                    {% if article.votings.exists %}
+                        <div>
+                            <a href="{{ article.votings.first.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
                         </div>
                     {% endif %}
 
