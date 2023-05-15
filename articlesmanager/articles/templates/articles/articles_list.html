@@ -12,7 +12,7 @@
     <legend class="text-center">Список статей</legend>
     <div class="row justify-content-center">
 
-        <div class="col-10">
+        <div class="table-wrap">
             {% if 'articles.add_article' in perms %}
                 <a href="{% url 'create_articles' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
             {% endif %}

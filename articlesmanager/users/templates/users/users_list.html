@@ -10,7 +10,7 @@
 
     <legend class="text-center">Список пользователей</legend>
     <div class="row justify-content-center">
-        <div class="col-10">
+        <div class="table-wrap">
             {% if 'users.add_customuser' in perms %}
                 <a href="{% url 'create_users' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
             {% endif %}
@@ -36,7 +36,7 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.position }}</td>
                         <td>
-                            <a href="{{ user.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
+                            <a href="{{ user.get_detail_url }}" class="btn btn-primary flex">Просмотреть</a>
                         </td>
                     </tr>
                 {% endfor %}
