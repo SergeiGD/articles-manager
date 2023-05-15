@@ -4,3 +4,4 @@
 .env
 venv
 postgres_data
+articlesmanager/mediag
