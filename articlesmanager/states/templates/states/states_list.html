@@ -10,7 +10,7 @@
 
     <legend class="text-center"> Список статусов статей</legend>
     <div class="row justify-content-center">
-        <div class="row justify-content-center"">
+        <div class="table-wrap">
             {% if 'states.add_state' in perms %}
                 <a href="{% url 'create_states' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
             {% endif %}

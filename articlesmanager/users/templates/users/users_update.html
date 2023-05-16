@@ -11,7 +11,7 @@
     <legend class="text-center">Изменить пользователя #{{ user.pk }}</legend>
     <div class="card">
 
-        <form class="card-body" action="." method="POST">
+        <form class="card-body row" action="." method="POST">
 
             {% if form.errors %}
                 {% for field in form %}
@@ -51,11 +51,11 @@
                 <label for="{{ form.position.id_for_label }}" class="form-label">{{ form.position.label }}</label>
                 {{ form.position }}
             </div>
-            <div class="d-flex justify-content gap-5">
-                <div>
+            <div class="d-flex justify-content gap-3 row row-cols-auto">
+                <div class="col">
                     <button type="submit" class="btn btn-primary ">Сохранить</button>
                 </div>
-                <div>
+                <div class="col">
                     <a href="{{ user.get_detail_url }}" class="btn btn-outline-primary">Отменить</a>
                 </div>
             </div>
@@ -64,7 +64,7 @@
 
     <legend class="text-center">Группы пользователя</legend>
     <div class="card">
-        <div class="card-body">
+        <div class="card-body table-wrap">
             <a href="{{ user.get_select_group_url }}" class="btn btn-primary w-100">+ Добавить</a>
             <table class="table table-striped table-bordered mt-3">
                 <thead>
