@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
 from .models import Notification
+from .filters import NotificationFilter
 
 class NotificationsList(LoginRequiredMixin, ListView):
     template_name = 'notifications/notifications_list.html'
@@ -16,6 +17,15 @@ class NotificationsList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = NotificationFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class NotificationsDetail(LoginRequiredMixin, DetailView):

@@ -52,7 +52,7 @@ class CustomUser(AbstractUser):
             ).exists():
                 result.append(article)
 
-        return result
+        return self.articles.filter(id__in=[i.id for i in result])
 
     def can_create_review(self, article):
         if article.date_deleted is not None or article.is_ready_to_votings:

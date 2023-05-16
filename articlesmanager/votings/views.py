@@ -12,6 +12,7 @@ from .models import Voting, VotingUsers
 from articles.models import Article
 from .forms import VotingForm
 from notifications.utils import create_voting_notification
+from .filters import VotingFilter
 
 
 class VotingsList(LoginRequiredMixin, ListView):
@@ -20,6 +21,15 @@ class VotingsList(LoginRequiredMixin, ListView):
     context_object_name = 'votings'
     paginator_class = Paginator
     paginate_by = 8
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = VotingFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class VotingsCreate(LoginRequiredMixin, CreateView):

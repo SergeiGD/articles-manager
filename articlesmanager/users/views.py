@@ -1,5 +1,3 @@
-from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required
@@ -12,6 +10,8 @@ from django.core.mail import EmailMessage
 from .models import CustomUser, Position
 from .forms import CreateUsersForm, PositionForm, UpdateUserForm, ResetPasswordForm
 from groups.models import UserGroup
+from .filters import CustomUserFilter, PositionFilter
+from groups.filters import GroupFilter
 
 
 class UsersList(LoginRequiredMixin, ListView):
@@ -23,6 +23,15 @@ class UsersList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = CustomUserFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class UsersCreate(PermissionRequiredMixin, CreateView):
@@ -114,6 +123,15 @@ class PositionsList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Position.objects.filter(date_deleted=None)
 
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = PositionFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
+
 
 class PositionsCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('add_position',)
@@ -175,7 +193,12 @@ class SelectGroupsList(PermissionRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         user_pk = self.kwargs['pk']
         context['user'] = get_object_or_404(CustomUser, pk=user_pk)
+        context['filter'] = self.q_filter
         return context
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = GroupFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
 
 
 @permission_required('change_usergroup', 'change_customuser')
