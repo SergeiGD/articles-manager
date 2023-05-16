@@ -119,7 +119,7 @@
 
                     {% if article.votings.exists %}
                         <div>
-                            <a href="{{ article.votings.first.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
+                            <a href="{{ article.votings.last.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
                         </div>
                     {% endif %}
 
