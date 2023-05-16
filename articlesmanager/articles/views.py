@@ -11,7 +11,13 @@ from authors.models import Author
 from users.models import CustomUser
 from states.models import State
 from .forms import ArticlesForm
+from notifications.models import Notification
+from notifications.utils import create_reviewer_notification, create_republished_notification
 import json
+from .filters import ArticleFilter
+from authors.filters import AuthorFilter
+from users.filters import CustomUserFilter
+
 
 class ArticlesList(LoginRequiredMixin, ListView):
     template_name = 'articles/articles_list.html'
@@ -19,6 +25,15 @@ class ArticlesList(LoginRequiredMixin, ListView):
     context_object_name = 'articles'
     paginator_class = Paginator
     paginate_by = 8
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = ArticleFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
     def get_queryset(self):
         return Article.objects.filter(date_deleted=None)
@@ -51,7 +66,6 @@ class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         state = State.objects.get(pk=state_id)
         form.instance.save()
         form.instance.states.add(state)
-        form.instance.users.add(self.request.user)
         return HttpResponseRedirect(redirect_to=reverse_lazy('articles'))
 
     def form_invalid(self, form):
@@ -87,6 +101,11 @@ def mark_as_republished(request, pk):
     article = Article.objects.get(pk=pk)
     article.date_repulished = timezone.now()
     article.save()
+    Notification.objects.create(
+        user=request.user,
+        subject=Notification.NotificationsSubjects.ARTICLE_REPUBLISHED,
+        content=create_republished_notification(article),
+    )
     return HttpResponseRedirect(article.get_show_url())
 
 
@@ -117,10 +136,15 @@ class SelectAuthorsList(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return Author.objects.filter(date_deleted=None)
 
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = AuthorFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         article_pk = self.kwargs['pk']
         context['article'] = get_object_or_404(Article, pk=article_pk)
+        context['filter'] = self.q_filter
         return context
 
 
@@ -135,10 +159,15 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
 
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = CustomUserFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         article_pk = self.kwargs['pk']
         context['article'] = get_object_or_404(Article, pk=article_pk)
+        context['filter'] = self.q_filter
         return context
 
 
@@ -155,6 +184,11 @@ def add_user_to_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
     article.users.add(user)
+    Notification.objects.create(
+        user=user,
+        subject=Notification.NotificationsSubjects.REVIEWER,
+        content=create_reviewer_notification(article),
+    )
     return HttpResponseRedirect(article.get_update_url())
 
 

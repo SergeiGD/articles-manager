@@ -17,3 +17,6 @@ class State(models.Model):
 
     def get_delete_url(self):
         return reverse('delete_states', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = ['-date_created']

@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block header_meta %}
+    <title>Просмотр уведомления #{{ notification.pk }}</title>
+{% endblock header_meta %}
+
+{% block content %}
+
+    <legend class="text-center">Просмотр уведомления #{{ notification.pk }}</legend>
+    <div class="card ">
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-lg-6 col-12">
+                    <span class="fs-5">Тема письма: </span>
+                    <span class="fs-5">{{ notification.subject }}</span>
+                </div>
+
+                <div class="col-lg-6 col-12">
+                    <span class="fs-5">Дата: </span>
+                    <span class="fs-5">{{ notification.date_created }}</span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <span class="fs-5">Содержимое: </span>
+                    <span class="fs-5">{{ notification.content|safe }}</span>
+                </div>
+
+                <div class="col-12 mt-2">
+                    <span class="fs-5">Статус: </span>
+                    {% if notification.checked %}
+                        <span class="fs-5">Прочитано</span>
+                    {% else %}
+                        <span class="fs-5">Не прочитано</span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-3 mt-3">
+                <div>
+                    <a href="{% url 'notifications' %}" class="btn btn-outline-primary">К списку уведомлений</a>
+                </div>
+                <div>
+                    <a href="{{ notification.get_checked_url }}" class="btn btn-warning">Прочитано</a>
+                </div>
+                <div>
+                    <form action="{{ notification.get_delete_url }}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}

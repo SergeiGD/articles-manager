@@ -6,6 +6,8 @@ from django.views.generic import ListView, CreateView, DeleteView, UpdateView, D
 from django.core.paginator import Paginator
 from .models import State
 from .forms import StatesForm
+from .filters import StateFilter
+
 
 class StatesList(LoginRequiredMixin, ListView):
     template_name = 'states/states_list.html'
@@ -16,6 +18,15 @@ class StatesList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return State.objects.filter(date_deleted=None)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = StateFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class StatesCreate(PermissionRequiredMixin, CreateView):
@@ -33,7 +44,9 @@ class StatesUpdate(PermissionRequiredMixin, UpdateView):
     model = State
     context_object_name = 'state'
     form_class = StatesForm
-    success_url = reverse_lazy('states')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return State.objects.filter(date_deleted=None)

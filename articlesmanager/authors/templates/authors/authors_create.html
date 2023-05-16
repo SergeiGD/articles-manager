@@ -12,6 +12,22 @@
     <div class="card">
         <form class="card-body" action="." method="POST">
 
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ field.label|escape }}:</strong>
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             {% csrf_token %}
 
             <div class="mb-3">
@@ -30,11 +46,11 @@
                 <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
                 {{ form.email }}
             </div>
-            <div class="d-flex justify-content gap-5">
-                <div>
+            <div class="d-flex gap-3 row row-cols-auto">
+                <div class="col">
                     <button type="submit" class="btn btn-primary ">Сохранить</button>
                 </div>
-                <div>
+                <div class="col">
                     <a href="{% url 'authors' %}" class="btn btn-outline-primary">Отменить</a>
                 </div>
             </div>

@@ -6,15 +6,27 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
-ul li {
+/*ul li {
     display: inline-block;
     padding-right: 10px;
     margin-left: 10px;
     font-size: 20px;
     margin-top: 20px;
-}
-
+}*/
+.table-wrap {
+    text-align: center;
+    display: inline-block;
+    background-color: #fff;
+    padding: 2rem 2rem;
+    color: #000;
+    overflow: auto;
+  }
+  
+  @media screen and (max-width: 640px) {
+    .table-wrap {
+      overflow-y: scroll;
+    }
+  }
 #detail {
     width: 90%;
     margin: 0 auto; /* Added */

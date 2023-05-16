@@ -25,6 +25,7 @@
             {% endfor %}
         {% endif %}
         {% csrf_token %}
+
         <div class="card-body">
             <div class="mb-3">
                 <span>Статья:</span>
@@ -38,11 +39,11 @@
                 <label for="{{ form.date_end.id_for_label }}" class="form-label">{{ form.date_end.label }}</label>
                 {{ form.date_end }}
             </div>
-            <div class="d-flex justify-content-between">
-                <div>
+            <div class="d-flex justify-content gap-3 row row-cols-auto">
+                <div class="col">
                     <button type="submit" class="btn btn-primary ">Сохранить</button>
                 </div>
-                <div>
+                <div class="col">
                     <a href="{% url 'articles' %}" class="btn btn-outline-primary">Отменить</a>
                 </div>
             </div>

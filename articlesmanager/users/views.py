@@ -9,6 +9,10 @@ from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
 from .models import CustomUser, Position
 from .forms import CreateUsersForm, PositionForm, UpdateUserForm, ResetPasswordForm
+from groups.models import UserGroup
+from .filters import CustomUserFilter, PositionFilter
+from groups.filters import GroupFilter
+
 
 class UsersList(LoginRequiredMixin, ListView):
     template_name = 'users/users_list.html'
@@ -19,6 +23,15 @@ class UsersList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = CustomUserFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class UsersCreate(PermissionRequiredMixin, CreateView):
@@ -56,7 +69,9 @@ class UsersUpdate(PermissionRequiredMixin, UpdateView):
     model = CustomUser
     context_object_name = 'user'
     form_class = UpdateUserForm
-    success_url = reverse_lazy('users')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
@@ -95,6 +110,8 @@ def reset_user_password(request, pk):
             email.send()
             return HttpResponseRedirect(user.get_detail_url())
 
+        return render(request, 'users/reset_password.html', {'form': form, 'user': user})
+
 
 class PositionsList(LoginRequiredMixin, ListView):
     template_name = 'users/positions_list.html'
@@ -105,6 +122,15 @@ class PositionsList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Position.objects.filter(date_deleted=None)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = PositionFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class PositionsCreate(PermissionRequiredMixin, CreateView):
@@ -122,7 +148,9 @@ class PositionsUpdate(PermissionRequiredMixin, UpdateView):
     model = Position
     context_object_name = 'position'
     form_class = PositionForm
-    success_url = reverse_lazy('positions')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return Position.objects.filter(date_deleted=None)
@@ -151,3 +179,39 @@ class PositionsDelete(PermissionRequiredMixin, DeleteView):
         position.date_deleted = timezone.now()
         position.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class SelectGroupsList(PermissionRequiredMixin, ListView):
+    permission_required = ('change_usergroup', 'change_customuser')
+    template_name = 'users/add_group_to_user.html'
+    model = UserGroup
+    context_object_name = 'groups'
+    paginator_class = Paginator
+    paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_pk = self.kwargs['pk']
+        context['user'] = get_object_or_404(CustomUser, pk=user_pk)
+        context['filter'] = self.q_filter
+        return context
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = GroupFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+
+@permission_required('change_usergroup', 'change_customuser')
+def add_group_to_user(request, pk, group_id):
+    group = UserGroup.objects.get(pk=group_id)
+    user = CustomUser.objects.get(pk=pk)
+    group.user_set.add(user)
+    return HttpResponseRedirect(user.get_update_url())
+
+
+@permission_required('change_usergroup', 'change_customuser')
+def remove_group_from_user(request, pk, group_id):
+    group = UserGroup.objects.get(pk=group_id)
+    user = CustomUser.objects.get(pk=pk)
+    group.user_set.remove(user)
+    return HttpResponseRedirect(user.get_update_url())

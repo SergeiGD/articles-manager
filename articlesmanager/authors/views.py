@@ -7,6 +7,8 @@ from django.views.generic import ListView, CreateView, DeleteView, UpdateView, D
 from django.core.paginator import Paginator
 from .models import Author
 from .forms import AuthorsForm
+from .filters import AuthorFilter
+
 
 class AuthorsList(LoginRequiredMixin, ListView):
     template_name = 'authors/authors_list.html'
@@ -17,6 +19,15 @@ class AuthorsList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Author.objects.filter(date_deleted=None)
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = AuthorFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class AuthorsCreate(PermissionRequiredMixin, CreateView):
@@ -43,7 +54,9 @@ class AuthorsUpdate(PermissionRequiredMixin, UpdateView):
     model = Author
     context_object_name = 'author'
     form_class = AuthorsForm
-    success_url = reverse_lazy('authors')
+
+    def get_success_url(self):
+        return self.object.get_detail_url()
 
     def get_queryset(self):
         return Author.objects.filter(date_deleted=None)

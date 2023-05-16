@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Max
 from django.urls import reverse
 from django.utils import timezone
+from django.core.validators import MaxValueValidator, MinValueValidator
 from authors.models import Author
 from states.models import State
 from users.models import CustomUser
@@ -26,9 +27,15 @@ class ArticleState(models.Model):
 class Article(models.Model):
     name = models.CharField(max_length=255, verbose_name='Наименование')
     file = models.FileField(verbose_name='Файл')
-    unique = models.FloatField(verbose_name='Оригинальность')
+    unique = models.FloatField(verbose_name='Оригинальность', validators=[
+        MaxValueValidator(100),
+        MinValueValidator(0)
+    ])
     bibliography = models.TextField(verbose_name='Библиография')
-    quoting = models.FloatField(verbose_name='Степень цитирования')
+    quoting = models.FloatField(verbose_name='Степень цитирования', validators=[
+        MaxValueValidator(100),
+        MinValueValidator(0)
+    ])
     authors = models.ManyToManyField(
         verbose_name='Авторы',
         related_name='articles',
@@ -54,7 +61,7 @@ class Article(models.Model):
     date_repulished = models.DateTimeField(default=timezone.now, verbose_name='Дата внесения правок')
 
     class Meta:
-        ordering = ['-date_repulished']
+        ordering = ['-date_created']
 
     def get_current_state(self):
         return self.states.filter(
@@ -70,6 +77,7 @@ class Article(models.Model):
         return self.reviews.filter(
             date_created__gt=self.date_repulished,
             approved=True,
+            user__in=self.users.all(),
         ).count()
 
     @property
@@ -77,10 +85,15 @@ class Article(models.Model):
         return self.reviews.filter(
             date_created__gt=self.date_repulished,
             approved=False,
+            user__in=self.users.all(),
         ).count()
 
     @property
     def enable_for_votings(self):
+
+        if self.votings.exists():
+            return False
+
         if self.is_ready_to_votings:
             return True
 

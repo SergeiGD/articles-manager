@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     'votings.apps.VotingsConfig',
     'reviews.apps.ReviewsConfig',
     'groups.apps.GroupsConfig',
+    'spurl',
+    'django_filters',
+    'bootstrapform',
 ]
 
 MIDDLEWARE = [
