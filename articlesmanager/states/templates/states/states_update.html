@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    <legend class="text-center"> Изменить статью #{{ state.pk }}</legend>
+    <legend class="text-center"> Изменить статус #{{ state.pk }}</legend>
     <div class="card ">
         <form class="card-body" method="POST" action=".">
 
@@ -33,11 +33,11 @@
                 <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
                 {{ form.name }}
             </div>
-            <div class="d-flex gap-3 ">
-                <div>
+            <div class="d-flex gap-3 row row-cols-auto">
+                <div class="col">
                     <button type="submit" class="btn btn-primary ">Сохранить</button>
                 </div>
-                <div>
+                <div class="col">
                     <a href="{% url 'states' %}" class="btn btn-outline-primary">Отменить</a>
                 </div>
             </div>
