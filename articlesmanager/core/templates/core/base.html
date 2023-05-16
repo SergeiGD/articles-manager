@@ -29,6 +29,7 @@
             <li class="nav-item"><a href="{% url 'reviews' %}" class="nav-link">Рецензии</a></li>
             <li class="nav-item"><a href="{% url 'users' %}" class="nav-link ">Пользователи</a></li>
             <li class="nav-item"><a href="{% url 'groups' %}" class="nav-link">Группы</a></li>
+            <li class="nav-item"><a href="{% url 'positions' %}" class="nav-link">Должности</a></li>
         </ul>
             <div>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" class="btn btn-outline-primary me-2">
@@ -39,27 +40,7 @@
       </div>
     </div>
 </nav>
-<!--<header class="d-flex justify-content-between">
-    <ul class="nav col-8 align-items-center mb-2 text-start">
-        <li><a href="{% url 'articles' %}" class="nav-link px-2">Статьи</a></li>
-        <li><a href="{% url 'authors' %}" class="nav-link px-2">Авторы</a></li>
-        <li><a href="{% url 'states' %}" class="nav-link px-2">Статусы</a></li>
-        <li><a href="{% url 'votings' %}" class="nav-link px-2">Голосования</a></li>
-        <li><a href="{% url 'reviews' %}" class="nav-link px-2">Рецензии</a></li>
-        <li><a href="{% url 'users' %}" class="nav-link px-2">Пользователи</a></li>
-        <li><a href="{% url 'groups' %}" class="nav-link px-2">Группы</a></li>
-        <li><a href="{% url 'positions' %}" class="nav-link px-2">Должности</a></li>
-    </ul>
 
-    <div class="col-4 text-end px-3">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button"
-           class="btn btn-outline-primary me-2">
-            {{ request.user.first_name }} {{ request.user.last_name }}
-        </a>
-        <a type="button" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
-    </div>
-
-</header>-->
 <hr class="mt-0"/>
 
 {% block content %}

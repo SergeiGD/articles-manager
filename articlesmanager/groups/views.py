@@ -8,6 +8,8 @@ from django.core.paginator import Paginator
 from .models import UserGroup, GroupPermission
 from .forms import GroupsForm
 from users.models import CustomUser
+from .filters import GroupFilter, PermissionFilter
+from users.filters import CustomUserFilter
 
 
 class GroupsList(LoginRequiredMixin, ListView):
@@ -16,6 +18,15 @@ class GroupsList(LoginRequiredMixin, ListView):
     context_object_name = 'groups'
     paginator_class = Paginator
     paginate_by = 8
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = GroupFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class GroupsCreate(PermissionRequiredMixin, CreateView):
@@ -58,10 +69,15 @@ class SelectPermissionsList(PermissionRequiredMixin, ListView):
     paginator_class = Paginator
     paginate_by = 8
 
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = PermissionFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_pk = self.kwargs['pk']
         context['group'] = get_object_or_404(UserGroup, pk=group_pk)
+        context['filter'] = self.q_filter
         return context
 
 
@@ -93,10 +109,15 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
 
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = CustomUserFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         group_pk = self.kwargs['pk']
         context['group'] = get_object_or_404(UserGroup, pk=group_pk)
+        context['filter'] = self.q_filter
         return context
 
 

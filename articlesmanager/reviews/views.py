@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from .models import Review
 from articles.models import Article
 from .forms import ReviewsForm
+from .filters import ArticlesToReviewFilter
 
 
 class ReviewsList(LoginRequiredMixin, ListView):
@@ -20,6 +21,15 @@ class ReviewsList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return self.request.user.get_articles_to_review()
+
+    def paginate_queryset(self, queryset, page_size):
+        self.q_filter = ArticlesToReviewFilter(self.request.GET, queryset=self.get_queryset())
+        return super().paginate_queryset(self.q_filter.qs, page_size)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.q_filter
+        return context
 
 
 class ReviewsCreate(PermissionRequiredMixin, CreateView):

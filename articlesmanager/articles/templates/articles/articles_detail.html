@@ -108,7 +108,7 @@
 
                     {% if article.votings.exists %}
                         <div>
-                            <a href="{{ article.votings.first.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
+                            <a href="{{ article.votings.last.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
                         </div>
                     {% endif %}
 
@@ -153,8 +153,8 @@
     </div>
 
     <legend class="text-center">Рецензенты статьи</legend>
-    <div class="card">
-        <div class="card-body table-wrap">
+    <div class="card overflow-auto">
+        <div class="card-body">
             <table class="table table-striped table-bordered mt-3">
                 <thead>
                 <tr>
