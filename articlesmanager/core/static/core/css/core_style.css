@@ -26,25 +26,7 @@ header {
     .table-wrap {
       overflow-y: scroll;
     }
-    .btn{
-      font-size:xx-small;
-    }
   }
-  .table{
-    table-layout: fixed;
-  }
-  td{
-    word-wrap:break-word;
-  }
-  th{
-    word-wrap: break-word;
-  }
-  .flex {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    
-}
 #detail {
     width: 90%;
     margin: 0 auto; /* Added */
