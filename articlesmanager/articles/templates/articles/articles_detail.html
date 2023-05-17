@@ -72,7 +72,7 @@
                         <a href="{{ article.get_update_url }}" class="btn btn-warning">Изменить</a>
                     </div>
 
-                    {% if 'articles.change_article' in perms %}
+                    {% if 'articles.change_article' in perms and not article.votings.exists %}
                         <div class="col">
                             <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
                         </div>
