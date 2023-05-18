@@ -61,6 +61,11 @@ class Voting(models.Model):
 
     class Meta:
         ordering = ['-date_start', ]
+        permissions = (
+            ("добавление_голосований", "Добавление голосований"),
+            ("изменение_голосований", "Изменение голосований"),
+            ("удаление_голосований", "Удаление голосований"),
+        )
 
     def get_agreed_url(self):
         return reverse('votings_agreed', kwargs={'pk': self.pk})

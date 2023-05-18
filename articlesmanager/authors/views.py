@@ -31,7 +31,7 @@ class AuthorsList(LoginRequiredMixin, ListView):
 
 
 class AuthorsCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_author',)
+    permission_required = ('authors.добавление_авторов',)
     template_name = 'authors/authors_create.html'
     model = Author
     context_object_name = 'author'
@@ -49,7 +49,7 @@ class AuthorsDetail(LoginRequiredMixin, DetailView):
 
 
 class AuthorsUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_author',)
+    permission_required = ('authors.изменение_авторов',)
     template_name = 'authors/authors_update.html'
     model = Author
     context_object_name = 'author'
@@ -63,7 +63,7 @@ class AuthorsUpdate(PermissionRequiredMixin, UpdateView):
 
 
 class AuthorsDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_author',)
+    permission_required = ('authors.удаление_авторов',)
     model = Author
     success_url = reverse_lazy('authors')
 

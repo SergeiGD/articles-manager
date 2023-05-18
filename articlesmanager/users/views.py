@@ -35,7 +35,7 @@ class UsersList(LoginRequiredMixin, ListView):
 
 
 class UsersCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_customuser', )
+    permission_required = ('users.добавление_пользователей', )
     template_name = 'users/users_create.html'
     model = CustomUser
     context_object_name = 'user'
@@ -64,7 +64,7 @@ class UsersDetail(LoginRequiredMixin, DetailView):
 
 
 class UsersUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_customuser', )
+    permission_required = ('users.изменение_пользователей', )
     template_name = 'users/users_update.html'
     model = CustomUser
     context_object_name = 'user'
@@ -78,7 +78,7 @@ class UsersUpdate(PermissionRequiredMixin, UpdateView):
 
 
 class UsersDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_customuser',)
+    permission_required = ('users.удаление_пользователей',)
     model = CustomUser
     success_url = reverse_lazy('users')
 
@@ -89,7 +89,7 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-@permission_required('change_customuser')
+@permission_required('users.изменение_пользователей')
 def reset_user_password(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
 
@@ -134,7 +134,7 @@ class PositionsList(LoginRequiredMixin, ListView):
 
 
 class PositionsCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_position',)
+    permission_required = ('users.добавление_должностей',)
     template_name = 'users/positions_create.html'
     model = Position
     context_object_name = 'positions'
@@ -143,7 +143,7 @@ class PositionsCreate(PermissionRequiredMixin, CreateView):
 
 
 class PositionsUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_position',)
+    permission_required = ('users.изменение_должностей',)
     template_name = 'users/positions_update.html'
     model = Position
     context_object_name = 'position'
@@ -166,7 +166,7 @@ class PositionsDetail(LoginRequiredMixin, DetailView):
 
 
 class PositionsDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_position',)
+    permission_required = ('users.удаление_должностей',)
     model = Position
     success_url = reverse_lazy('positions')
 
@@ -182,7 +182,7 @@ class PositionsDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SelectGroupsList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_usergroup', 'change_customuser')
+    permission_required = ('groups.изменение_групп', 'users.изменение_пользователей')
     template_name = 'users/add_group_to_user.html'
     model = UserGroup
     context_object_name = 'groups'
@@ -201,7 +201,7 @@ class SelectGroupsList(PermissionRequiredMixin, ListView):
         return super().paginate_queryset(self.q_filter.qs, page_size)
 
 
-@permission_required('change_usergroup', 'change_customuser')
+@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
 def add_group_to_user(request, pk, group_id):
     group = UserGroup.objects.get(pk=group_id)
     user = CustomUser.objects.get(pk=pk)
@@ -209,7 +209,7 @@ def add_group_to_user(request, pk, group_id):
     return HttpResponseRedirect(user.get_update_url())
 
 
-@permission_required('change_usergroup', 'change_customuser')
+@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
 def remove_group_from_user(request, pk, group_id):
     group = UserGroup.objects.get(pk=group_id)
     user = CustomUser.objects.get(pk=pk)

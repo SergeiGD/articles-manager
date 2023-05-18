@@ -12,22 +12,22 @@
     <legend class="text-center">Просмотр статьи #{{ article.pk }}</legend>
     <div class="card">
         <div class="card-body row">
-                    <div class="mt-3 col-lg-6 col-sm-12">
-                        <span class="fs-5">Наименование: </span>
-                        <span class="fs-5">{{ article.name }}</span>
-                    </div>
-                    <div class="mt-3 col-lg-6 col-sm-12">
-                        <span class="fs-5">Файл: </span>
-                        <a href="{{ article.get_download_url }}" download>{{ article.file }}</a>
-                    </div>
-                    <div class="mt-3 col-lg-6 col-sm-12">
-                        <span class="fs-5">Оригинальность: </span>
-                        <span class="fs-5">{{ article.unique }}%</span>
-                    </div>
-                    <div class="mt-3 col-lg-6 col-sm-12">
-                        <span class="fs-5">Степень цитирования: </span>
-                        <span class="fs-5">{{ article.quoting }}%</span>
-                    </div>
+            <div class="mt-3 col-lg-6 col-sm-12">
+                <span class="fs-5">Наименование: </span>
+                <span class="fs-5">{{ article.name }}</span>
+            </div>
+            <div class="mt-3 col-lg-6 col-sm-12">
+                <span class="fs-5">Файл: </span>
+                <a href="{{ article.get_download_url }}" download>{{ article.file }}</a>
+            </div>
+            <div class="mt-3 col-lg-6 col-sm-12">
+                <span class="fs-5">Оригинальность: </span>
+                <span class="fs-5">{{ article.unique }}%</span>
+            </div>
+            <div class="mt-3 col-lg-6 col-sm-12">
+                <span class="fs-5">Степень цитирования: </span>
+                <span class="fs-5">{{ article.quoting }}%</span>
+            </div>
             <div class="mt-3">
                 <p>
                     <a class="fs-5" data-bs-toggle="collapse" href="#collapseExample" role="button"
@@ -65,21 +65,23 @@
                     <div class="col">
                         <a href="{% url 'articles' %}" class="btn btn-outline-primary">К списку статей</a>
                     </div>
-                    {% if 'articles.change_article' in perms %}
+                    {% if 'articles.изменение_статьей' in perms %}
+
+                        <div class="col">
+                            <a href="{{ article.get_update_url }}" class="btn btn-warning">Изменить</a>
+                        </div>
 
                     {% endif %}
-                    <div class="col">
-                        <a href="{{ article.get_update_url }}" class="btn btn-warning">Изменить</a>
-                    </div>
 
-                    {% if 'articles.change_article' in perms and not article.votings.exists %}
+
+                    {% if 'articles.изменение_статьей' in perms and not article.votings.exists %}
                         <div class="col">
                             <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
                         </div>
                     {% endif %}
 
 
-                    {% if 'articles.delete_article' in perms %}
+                    {% if 'articles.удаление_статьей' in perms %}
                         <div class="col">
                             <form action="{{ article.get_delete_url }}" method="POST">
                                 {% csrf_token %}
@@ -98,7 +100,7 @@
                         </div>
                     {% endif %}
 
-                    {% if article.is_ready_to_votings and not article.votings.exists %}
+                    {% if article.is_ready_to_votings and not article.votings.exists and 'votings.добавление_голосований' in perms %}
 
                         <div>
                             <a href="{{ article.get_create_voting_url }}" class="btn btn-outline-primary">Создать
@@ -108,7 +110,8 @@
 
                     {% if article.votings.exists %}
                         <div>
-                            <a href="{{ article.votings.last.get_detail_url }}" class="btn btn-outline-primary">Перейти к голосованию</a>
+                            <a href="{{ article.votings.last.get_detail_url }}" class="btn btn-outline-primary">Перейти
+                                к голосованию</a>
                         </div>
                     {% endif %}
 

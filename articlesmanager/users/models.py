@@ -86,6 +86,11 @@ class CustomUser(AbstractUser):
 
     class Meta:
         ordering = ['-date_created']
+        permissions = (
+            ("добавление_пользователей", "Добавление пользователей"),
+            ("изменение_пользователей", "Изменение пользователей"),
+            ("удаление_пользователей", "Удаление пользователей"),
+        )
 
 
 class Position(models.Model):
@@ -108,6 +113,11 @@ class Position(models.Model):
 
     class Meta:
         ordering = ['-date_created']
+        permissions = (
+            ("добавление_должностей", "Добавление должностей"),
+            ("изменение_должностей", "Изменение должностей"),
+            ("удаление_должностей", "Удаление должностей"),
+        )
 
 
 @receiver(pre_save, sender=CustomUser)

@@ -30,7 +30,7 @@ class StatesList(LoginRequiredMixin, ListView):
 
 
 class StatesCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_state',)
+    permission_required = ('states.добавление_статусов',)
     template_name = 'states/states_create.html'
     model = State
     context_object_name = 'states'
@@ -39,7 +39,7 @@ class StatesCreate(PermissionRequiredMixin, CreateView):
 
 
 class StatesUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_state',)
+    permission_required = ('states.изменение_статусов',)
     template_name = 'states/states_update.html'
     model = State
     context_object_name = 'state'
@@ -62,7 +62,7 @@ class StatesDetail(LoginRequiredMixin, DetailView):
 
 
 class StatesDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_state', )
+    permission_required = ('states.удаление_статусов', )
     model = State
     success_url = reverse_lazy('states')
 

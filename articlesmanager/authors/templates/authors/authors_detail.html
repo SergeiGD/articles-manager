@@ -33,12 +33,12 @@
                 <div class="col">
                     <a href="{% url 'authors' %}" class="btn btn-outline-primary">К списку авторов</a>
                 </div>
-                {% if 'authors.change_author' in perms %}
-                    <div clas="col">
+                {% if 'authors.изменение_авторов' in perms %}
+                    <div class="col">
                         <a href="{{ author.get_update_url }}" class="btn btn-warning">Изменить</a>
                     </div>
                 {% endif %}
-                {% if 'authors.delete_author' in perms %}
+                {% if 'authors.удаление_авторов' in perms %}
                     <div class="col">
                         <form action="{{ author.get_delete_url }}" method="POST">
                             {% csrf_token %}

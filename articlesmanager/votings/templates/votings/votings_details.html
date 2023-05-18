@@ -70,7 +70,7 @@
                         <a href="{% url 'votings' %}" class="btn btn-outline-primary">К списку голосований</a>
                     </div>
 
-                    {% if 'votings.change_voting' in perms %}
+                    {% if 'votings.изменение_голосований' in perms %}
                         <div class="col-6">
                             <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
                         </div>

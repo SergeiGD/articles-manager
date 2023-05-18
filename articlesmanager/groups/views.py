@@ -30,7 +30,7 @@ class GroupsList(LoginRequiredMixin, ListView):
 
 
 class GroupsCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_usergroup',)
+    permission_required = ('groups.добавление_групп',)
     template_name = 'groups/groups_create.html'
     model = UserGroup
     context_object_name = 'group'
@@ -39,7 +39,7 @@ class GroupsCreate(PermissionRequiredMixin, CreateView):
 
 
 class GroupsUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_usergroup',)
+    permission_required = ('groups.изменение_групп',)
     template_name = 'groups/groups_update.html'
     model = UserGroup
     context_object_name = 'group'
@@ -56,13 +56,13 @@ class GroupsDetail(LoginRequiredMixin, DetailView):
 
 
 class GroupsDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_usergroup',)
+    permission_required = ('groups.удаление_групп',)
     model = UserGroup
     success_url = reverse_lazy('groups')
 
 
 class SelectPermissionsList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_usergroup',)
+    permission_required = ('groups.изменение_групп',)
     template_name = 'groups/add_permission_to_group.html'
     model = GroupPermission
     context_object_name = 'permissions'
@@ -81,7 +81,7 @@ class SelectPermissionsList(PermissionRequiredMixin, ListView):
         return context
 
 
-@permission_required('change_usergroup')
+@permission_required('groups.изменение_групп')
 def add_permission_to_group(request, pk, permission_id):
     group = UserGroup.objects.get(pk=pk)
     permission = GroupPermission.objects.get(pk=permission_id)
@@ -89,7 +89,7 @@ def add_permission_to_group(request, pk, permission_id):
     return HttpResponseRedirect(group.get_update_url())
 
 
-@permission_required('change_usergroup')
+@permission_required('groups.изменение_групп')
 def remove_permission_from_group(request, pk, permission_id):
     group = UserGroup.objects.get(pk=pk)
     permission = GroupPermission.objects.get(pk=permission_id)
@@ -99,7 +99,7 @@ def remove_permission_from_group(request, pk, permission_id):
 
 
 class SelectUsersList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_usergroup', 'change_customuser')
+    permission_required = ('groups.изменение_групп', 'users.изменение_пользователей')
     template_name = 'groups/add_users_to_group.html'
     model = CustomUser
     context_object_name = 'users'
@@ -121,7 +121,7 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
         return context
 
 
-@permission_required('change_usergroup', 'change_customuser')
+@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
 def add_user_to_group(request, pk, user_id):
     group = UserGroup.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -129,7 +129,7 @@ def add_user_to_group(request, pk, user_id):
     return HttpResponseRedirect(group.get_update_url())
 
 
-@permission_required('change_usergroup', 'change_customuser')
+@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
 def remove_user_from_group(request, pk, user_id):
     group = UserGroup.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)

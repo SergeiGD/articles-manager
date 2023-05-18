@@ -62,6 +62,11 @@ class Article(models.Model):
 
     class Meta:
         ordering = ['-date_created']
+        permissions = (
+            ("добавление_статьей", "Добавление статьей"),
+            ("изменение_статьей", "Изменение статей"),
+            ("удаление_статьей", "Удаление статей"),
+        )
 
     def get_current_state(self):
         return self.states.filter(

@@ -22,6 +22,11 @@ class UserGroup(Group):
     class Meta:
         proxy = True
         ordering = ['-id', ]
+        permissions = (
+            ("добавление_групп", "Добавление групп"),
+            ("изменение_групп", "Изменение групп"),
+            ("удаление_групп", "Удаление групп"),
+        )
 
 
 class GroupPermission(Permission):

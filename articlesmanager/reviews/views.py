@@ -33,7 +33,6 @@ class ReviewsList(LoginRequiredMixin, ListView):
 
 
 class ReviewsCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_review',)
     template_name = 'reviews/review_create.html'
     model = Review
     context_object_name = 'review'

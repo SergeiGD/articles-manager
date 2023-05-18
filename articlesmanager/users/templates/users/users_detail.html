@@ -41,17 +41,17 @@
                 <div  class="col">
                     <a href="{% url 'users' %}" class="btn btn-outline-primary">К списку пользователей</a>
                 </div>
-                {% if 'users.change_customuser' in perms %}
+                {% if 'users.изменение_пользователей' in perms %}
                     <div class="col">
                         <a href="{{ user.get_update_url }}" class="btn btn-warning">Изменить</a>
                     </div>
                 {% endif %}
-                {% if 'users.change_customuser' in perms %}
+                {% if 'users.изменение_пользователей' in perms %}
                     <div class="col">
                         <a href="{{ user.get_reset_password_url }}" class="btn btn-info">Сбросить пароль</a>
                     </div>
                 {% endif %}
-                {% if 'users.delete_customuser' in perms %}
+                {% if 'users.удаление_пользователей' in perms %}
                 <div class="col">
                     <form action="{{ user.get_delete_url }}" method="POST">
                         {% csrf_token %}

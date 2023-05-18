@@ -27,12 +27,12 @@
                 <div>
                     <a href="{% url 'positions' %}" class="btn btn-outline-primary">К списку должностей</a>
                 </div>
-                {% if 'users.change_position' in perms %}
+                {% if 'users.изменение_должностей' in perms %}
                 <div>
                     <a href="{{ position.get_update_url }}" class="btn btn-warning">Изменить</a>
                 </div>
                 {% endif %}
-                {% if 'users.delete_position' in perms %}
+                {% if 'users.удаление_должностей' in perms %}
                 <div>
                     <form action="{{ position.get_delete_url }}" method="POST">
                         {% csrf_token %}
