@@ -44,7 +44,9 @@ class UsersCreate(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        password = form.data['password']
+        password = CustomUser.objects.make_random_password()
+        self.object.set_password(password)
+        self.object.save()
         email = EmailMessage(
             subject='Регистрация',
             body=f'Ваш аккаунт создан. Пароль - {password}',
@@ -103,25 +105,16 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
 @permission_required('users.изменение_пользователей')
 def reset_user_password(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
-
-    if request.method == 'GET':
-        form = ResetPasswordForm()
-        return render(request, 'users/reset_password.html', {'form': form, 'user': user})
-    else:
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            password = form.data['password']
-            user.set_password(password)
-            user.save()
-            email = EmailMessage(
-                subject='Изменение пароля',
-                body=f'Ваш пароль был изменен на {password}',
-                to=[user.email, ],
-            )
-            email.send()
-            return HttpResponseRedirect(user.get_detail_url())
-
-        return render(request, 'users/reset_password.html', {'form': form, 'user': user})
+    password = CustomUser.objects.make_random_password()
+    user.set_password(password)
+    user.save()
+    email = EmailMessage(
+        subject='Изменение пароля',
+        body=f'Ваш пароль был изменен на {password}',
+        to=[user.email, ],
+    )
+    email.send()
+    return HttpResponseRedirect(user.get_detail_url())
 
 
 class PositionsList(LoginRequiredMixin, ListView):
