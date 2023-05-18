@@ -14,7 +14,7 @@
         <div class="card-body row">
             <div class="mb-3 col-lg-6 col-sm-12">
                 <span>Статья:</span>
-                <a href="{{ review.article.get_show_url }}">{{ review.article.name }}</a>
+                <a href="{{ review.article.get_detail_url }}">{{ review.article.name }}</a>
             </div>
 
             <div class="mt-3 col-lg-6 col-sm-12">
@@ -38,7 +38,7 @@
 
             <div class="d-flex gap-3 mt-3">
                 <div>
-                    <a href="{{ review.article.get_show_url  }}" class="btn btn-outline-primary">Назад к статье</a>
+                    <a href="{{ review.article.get_detail_url  }}" class="btn btn-outline-primary">Назад к статье</a>
                 </div>
             </div>
 

@@ -48,14 +48,13 @@
                     <a href="{{ notification.get_checked_url }}" class="btn btn-warning">Прочитано</a>
                 </div>
                 <div>
-                    <form action="{{ notification.get_delete_url }}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Удалить</button>
-                    </form>
+                    <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#delete_modal">Удалить</button>
                 </div>
             </div>
 
         </div>
     </div>
+
+    {% include 'core/delete_popup.html' %}
 
 {% endblock content %}

@@ -54,7 +54,7 @@
                         <td>{{ article.get_current_state.name|truncatechars:30 }}</td>
                         <td>{{ article.date_edited }}</td>
                         <td>
-                            <a href="{{ article.get_show_url }}" class="btn btn-primary">Просмотреть</a>
+                            <a href="{{ article.get_detail_url }}" class="btn btn-primary">Просмотреть</a>
                         </td>
                     </tr>
                 {% endfor %}

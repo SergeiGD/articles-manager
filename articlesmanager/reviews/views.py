@@ -32,7 +32,7 @@ class ReviewsList(LoginRequiredMixin, ListView):
         return context
 
 
-class ReviewsCreate(PermissionRequiredMixin, CreateView):
+class ReviewsCreate(LoginRequiredMixin, CreateView):
     template_name = 'reviews/review_create.html'
     model = Review
     context_object_name = 'review'
@@ -52,7 +52,7 @@ class ReviewsCreate(PermissionRequiredMixin, CreateView):
         form.instance.article = article
         form.instance.user = self.request.user
         form.instance.save()
-        return HttpResponseRedirect(redirect_to=form.instance.article.get_show_url())
+        return HttpResponseRedirect(redirect_to=form.instance.article.get_detail_url())
 
 
 class ReviewDetail(LoginRequiredMixin, DetailView):
@@ -60,3 +60,19 @@ class ReviewDetail(LoginRequiredMixin, DetailView):
     model = Review
     context_object_name = 'review'
     pk_url_kwarg = 'review_id'
+
+
+class ReviewUpdate(LoginRequiredMixin, UpdateView):
+    template_name = 'reviews/review_update.html'
+    model = Review
+    context_object_name = 'review'
+    form_class = ReviewsForm
+
+    def get_success_url(self):
+        return self.get_object().article.get_detail_url()
+
+    def form_valid(self, form):
+        if self.request.user != self.get_object().user:
+            raise PermissionDenied('Вы не являетесь автором этой рецензии')
+        form.instance.save()
+        return HttpResponseRedirect(redirect_to=form.instance.article.get_detail_url())

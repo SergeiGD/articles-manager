@@ -62,6 +62,11 @@ class UsersDetail(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return CustomUser.objects.filter(date_deleted=None)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
+
 
 class UsersUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('users.изменение_пользователей', )
@@ -84,7 +89,13 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         user = self.get_object()
+        email = f'{user.email}_deleted'
+        count = 1
+        while CustomUser.objects.filter(email=email).exists():
+            email = f'{email}_deleted_{count}'
+            count += 1
         user.date_deleted = timezone.now()
+        user.email = email
         user.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -163,6 +174,11 @@ class PositionsDetail(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Position.objects.filter(date_deleted=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
 
 
 class PositionsDelete(PermissionRequiredMixin, DeleteView):

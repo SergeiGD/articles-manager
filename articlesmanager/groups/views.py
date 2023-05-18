@@ -54,6 +54,11 @@ class GroupsDetail(LoginRequiredMixin, DetailView):
     model = UserGroup
     context_object_name = 'group'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
+
 
 class GroupsDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('groups.удаление_групп',)

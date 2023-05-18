@@ -22,6 +22,9 @@ class VotingsList(LoginRequiredMixin, ListView):
     paginator_class = Paginator
     paginate_by = 8
 
+    def get_queryset(self):
+        return Voting.objects.filter(article__date_deleted=None)
+
     def paginate_queryset(self, queryset, page_size):
         self.q_filter = VotingFilter(self.request.GET, queryset=self.get_queryset())
         return super().paginate_queryset(self.q_filter.qs, page_size)

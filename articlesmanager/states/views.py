@@ -60,6 +60,11 @@ class StatesDetail(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return State.objects.filter(date_deleted=None)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
+
 
 class StatesDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('states.удаление_статусов', )

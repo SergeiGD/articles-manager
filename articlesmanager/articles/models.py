@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.db.models import Max
 from django.urls import reverse
@@ -7,6 +9,15 @@ from authors.models import Author
 from states.models import State
 from users.models import CustomUser
 from votings.models import Voting
+
+
+def build_photo_path(instance, filename):
+    """
+    генерация пути для фотографий
+    """
+    ext = filename.split('.')[-1]
+    code = uuid.uuid4()
+    return '{0}.{1}'.format(code, ext)
 
 
 class ArticleState(models.Model):
@@ -26,7 +37,7 @@ class ArticleState(models.Model):
 
 class Article(models.Model):
     name = models.CharField(max_length=255, verbose_name='Наименование')
-    file = models.FileField(verbose_name='Файл')
+    file = models.FileField(verbose_name='Файл', upload_to=build_photo_path)
     unique = models.FloatField(verbose_name='Оригинальность', validators=[
         MaxValueValidator(100),
         MinValueValidator(0)
@@ -118,7 +129,7 @@ class Article(models.Model):
     def get_delete_url(self):
         return reverse('delete_articles', kwargs={'pk': self.pk})
 
-    def get_show_url(self):
+    def get_detail_url(self):
         return reverse('detail_articles', kwargs={'pk': self.pk})
 
     def get_download_url(self):

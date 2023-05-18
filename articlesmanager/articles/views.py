@@ -47,6 +47,7 @@ class ArticlesDetail(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['can_create_review'] = self.request.user.can_create_review(self.object)
+        context['delete_link'] = self.get_object().get_delete_url()
         return context
 
     def get_queryset(self):
@@ -93,7 +94,7 @@ class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
                 article_id=form.instance.pk,
                 date_set=timezone.now()
             )
-        return HttpResponseRedirect(redirect_to=self.object.get_show_url())
+        return HttpResponseRedirect(redirect_to=self.object.get_detail_url())
 
 
 @permission_required('articles.изменение_статьей')
@@ -106,7 +107,7 @@ def mark_as_republished(request, pk):
         subject=Notification.NotificationsSubjects.ARTICLE_REPUBLISHED,
         content=create_republished_notification(article),
     )
-    return HttpResponseRedirect(article.get_show_url())
+    return HttpResponseRedirect(article.get_detail_url())
 
 
 @permission_required('articles.изменение_статьей')

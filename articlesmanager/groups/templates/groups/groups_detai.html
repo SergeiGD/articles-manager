@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-
 {% load static %}
 
 {% block header_meta %}
@@ -31,10 +30,9 @@
                 {% endif %}
                 {% if 'groups.удаление_групп' in perms %}
                 <div class="col">
-                    <form action="{{ group.get_delete_url }}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Удалить</button>
-                    </form>
+
+                    <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#delete_modal">Удалить</button>
+
                 </div>
                 {% endif %}
             </div>
@@ -97,5 +95,8 @@
             </table>
         </div>
     </div>
+
+    {% include 'core/delete_popup.html' %}
+
 
 {% endblock content %}

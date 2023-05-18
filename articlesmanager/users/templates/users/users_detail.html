@@ -53,10 +53,7 @@
                 {% endif %}
                 {% if 'users.удаление_пользователей' in perms %}
                 <div class="col">
-                    <form action="{{ user.get_delete_url }}" method="POST">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Удалить</button>
-                    </form>
+                    <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#delete_modal">Удалить</button>
                 </div>
                 {% endif %}
             </div>
@@ -89,5 +86,7 @@
             </table>
         </div>
     </div>
+
+    {% include 'core/delete_popup.html' %}
 
 {% endblock content %}

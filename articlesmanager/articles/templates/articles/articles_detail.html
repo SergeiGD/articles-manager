@@ -47,14 +47,18 @@
             </div>
 
             {% if not article.is_ready_to_votings %}
-                <div class="mt-3 col-lg-6 col-sm-12">
-                    <span class="fs-5">Положительных рецензий: </span>
-                    <span class="fs-5">{{ article.count_approved }}</span>
-                </div>
+                <div class="mt-3 col-12 row">
 
-                <div class="mt-3 col-lg-6 col-sm-12">
-                    <span class="fs-5">Отрицательных рецензий: </span>
-                    <span class="fs-5">{{ article.count_unapproved }}</span>
+                    <div class="col-lg-6 col-sm-12">
+                        <span class="fs-5">Положительных рецензий: </span>
+                        <span class="fs-5">{{ article.count_approved }}</span>
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12">
+                        <span class="fs-5">Отрицательных рецензий: </span>
+                        <span class="fs-5">{{ article.count_unapproved }}</span>
+                    </div>
+
                 </div>
             {% endif %}
 
@@ -83,10 +87,7 @@
 
                     {% if 'articles.удаление_статьей' in perms %}
                         <div class="col">
-                            <form action="{{ article.get_delete_url }}" method="POST">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Удалить</button>
-                            </form>
+                            <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#delete_modal">Удалить</button>
                         </div>
                     {% endif %}
 
@@ -211,7 +212,11 @@
                                 Нет
                             {% endif %}
                         <td>
-                            <a href="{{ review.get_detail_url }}" class="btn btn-primary">Просмотр</a>
+                            {% if review.user == request.user %}
+                                <a href="{{ review.get_update_url }}" class="btn btn-warning">Изменить</a>
+                            {% else %}
+                                <a href="{{ review.get_detail_url }}" class="btn btn-primary">Просмотр</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -219,5 +224,7 @@
             </table>
         </div>
     </div>
+
+    {% include 'core/delete_popup.html' %}
 
 {% endblock content %}
