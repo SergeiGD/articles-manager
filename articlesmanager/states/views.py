@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from .models import State
 from .forms import StatesForm
 from .filters import StateFilter
+from . import services
 
 
 class StatesList(LoginRequiredMixin, ListView):
@@ -30,7 +31,7 @@ class StatesList(LoginRequiredMixin, ListView):
 
 
 class StatesCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('add_state',)
+    permission_required = ('states.добавление_статусов',)
     template_name = 'states/states_create.html'
     model = State
     context_object_name = 'states'
@@ -39,7 +40,7 @@ class StatesCreate(PermissionRequiredMixin, CreateView):
 
 
 class StatesUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('change_state',)
+    permission_required = ('states.изменение_статусов',)
     template_name = 'states/states_update.html'
     model = State
     context_object_name = 'state'
@@ -60,18 +61,18 @@ class StatesDetail(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return State.objects.filter(date_deleted=None)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
+
 
 class StatesDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_state', )
+    permission_required = ('states.удаление_статусов', )
     model = State
     success_url = reverse_lazy('states')
 
     def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
         state = self.get_object()
-        state.date_deleted = timezone.now()
-        state.save()
+        services.delete_state()
         return HttpResponseRedirect(self.get_success_url())

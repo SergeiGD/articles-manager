@@ -11,12 +11,13 @@ from authors.models import Author
 from users.models import CustomUser
 from states.models import State
 from .forms import ArticlesForm
-from notifications.models import Notification
-from notifications.utils import create_reviewer_notification, create_republished_notification
-import json
+from notifications.services import create_reviewer_notification
 from .filters import ArticleFilter
 from authors.filters import AuthorFilter
 from users.filters import CustomUserFilter
+from users.services import can_create_review
+from . import services
+
 
 
 class ArticlesList(LoginRequiredMixin, ListView):
@@ -46,7 +47,9 @@ class ArticlesDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['can_create_review'] = self.request.user.can_create_review(self.object)
+        context['can_create_review'] = can_create_review(self.request.user, self.object)
+        context['delete_link'] = self.get_object().get_delete_url()
+        context['is_enable_for_voting'] = services.is_enable_for_voting(self.get_object())
         return context
 
     def get_queryset(self):
@@ -54,7 +57,7 @@ class ArticlesDetail(LoginRequiredMixin, DetailView):
 
 
 class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
-    permission_required = ('add_article', )
+    permission_required = ('articles.добавление_статьей', )
     template_name = 'articles/articles_create.html'
     model = Article
     context_object_name = 'article'
@@ -62,19 +65,16 @@ class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('articles')
 
     def form_valid(self, form):
+        # берем state из формы
         state_id = form.data['current_state'][0]
         state = State.objects.get(pk=state_id)
         form.instance.save()
-        form.instance.states.add(state)
+        services.save_article(form.instance, state)
         return HttpResponseRedirect(redirect_to=reverse_lazy('articles'))
-
-    def form_invalid(self, form):
-        response = HttpResponse(json.dumps({'errors': form.errors}), status=400, content_type='application/json')
-        return response
 
 
 class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
-    permission_required = ('change_article',)
+    permission_required = ('articles.изменение_статьей',)
     template_name = 'articles/article_update.html'
     model = Article
     context_object_name = 'article'
@@ -87,29 +87,18 @@ class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
         state_id = form.data['current_state'][0]
         state = State.objects.get(pk=state_id)
         form.instance.save()
-        if form.instance.get_current_state() != state:
-            ArticleState.objects.update_or_create(
-                state_id=state_id,
-                article_id=form.instance.pk,
-                date_set=timezone.now()
-            )
-        return HttpResponseRedirect(redirect_to=self.object.get_show_url())
+        services.save_article(form.instance, state)
+        return HttpResponseRedirect(redirect_to=self.object.get_detail_url())
 
 
-@permission_required('change_article')
+@permission_required('articles.изменение_статьей')
 def mark_as_republished(request, pk):
     article = Article.objects.get(pk=pk)
-    article.date_repulished = timezone.now()
-    article.save()
-    Notification.objects.create(
-        user=request.user,
-        subject=Notification.NotificationsSubjects.ARTICLE_REPUBLISHED,
-        content=create_republished_notification(article),
-    )
-    return HttpResponseRedirect(article.get_show_url())
+    services.republish_article(request.user, article)
+    return HttpResponseRedirect(article.get_detail_url())
 
 
-@permission_required('change_article')
+@permission_required('articles.изменение_статьей')
 def remove_author_from_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -117,7 +106,7 @@ def remove_author_from_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
-@permission_required('change_article')
+@permission_required('articles.изменение_статьей')
 def remove_user_from_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -126,7 +115,7 @@ def remove_user_from_article(request, pk, user_id):
 
 
 class SelectAuthorsList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_article', )
+    permission_required = ('articles.изменение_статьей', )
     template_name = 'articles/add_author_to_article.html'
     model = Author
     context_object_name = 'authors'
@@ -149,7 +138,7 @@ class SelectAuthorsList(PermissionRequiredMixin, ListView):
 
 
 class SelectUsersList(PermissionRequiredMixin, ListView):
-    permission_required = ('change_article',)
+    permission_required = ('articles.изменение_статьей',)
     template_name = 'articles/add_user_to_article.html'
     model = CustomUser
     context_object_name = 'users'
@@ -171,7 +160,7 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
         return context
 
 
-@permission_required('change_article')
+@permission_required('articles.изменение_статьей')
 def add_author_to_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -179,20 +168,18 @@ def add_author_to_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
-@permission_required('change_article')
+@permission_required('articles.изменение_статьей')
 def add_user_to_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
     article.users.add(user)
-    Notification.objects.create(
-        user=user,
-        subject=Notification.NotificationsSubjects.REVIEWER,
-        content=create_reviewer_notification(article),
-    )
+    # отправляем уведомление о добавление в список ревьюверов
+    create_reviewer_notification(request.user, article)
     return HttpResponseRedirect(article.get_update_url())
 
 
 def download_article(request, pk):
+    # скачивание файла
     article = Article.objects.get(pk=pk)
     filename = article.file.path
     response = FileResponse(open(filename, 'rb'))
@@ -200,7 +187,7 @@ def download_article(request, pk):
 
 
 class ArticlesDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('delete_article', )
+    permission_required = ('articles.удаление_статьей', )
     model = Article
     success_url = reverse_lazy('articles')
 
@@ -210,6 +197,5 @@ class ArticlesDelete(PermissionRequiredMixin, DeleteView):
         success URL.
         """
         article = self.get_object()
-        article.date_deleted = timezone.now()
-        article.save()
+        services.delete_article(article)
         return HttpResponseRedirect(self.get_success_url())

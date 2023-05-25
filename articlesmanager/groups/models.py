@@ -11,7 +11,7 @@ class UserGroup(Group):
         return reverse('detail_groups', kwargs={'pk': self.pk})
 
     def get_delete_url(self):
-        return reverse('detail_groups', kwargs={'pk': self.pk})
+        return reverse('delete_groups', kwargs={'pk': self.pk})
 
     def get_select_permission_url(self):
         return reverse('select_permission', kwargs={'pk': self.pk})
@@ -22,6 +22,11 @@ class UserGroup(Group):
     class Meta:
         proxy = True
         ordering = ['-id', ]
+        permissions = (
+            ("добавление_групп", "Добавление групп"),
+            ("изменение_групп", "Изменение групп"),
+            ("удаление_групп", "Удаление групп"),
+        )
 
 
 class GroupPermission(Permission):
