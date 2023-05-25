@@ -31,7 +31,7 @@
 
             <a href="{{ request.path }}" class="btn btn-info w-100 mb-3">Очистить</a>
 
-            {% if 'groups.add_group' in perms %}
+            {% if 'groups.добавление_групп' in perms %}
                 <a href="{% url 'create_groups' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
             {% endif %}
             <table class="table table-striped table-bordered">

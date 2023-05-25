@@ -32,6 +32,11 @@ class Author(models.Model):
 
     class Meta:
         ordering = ['-date_created']
+        permissions = (
+            ("добавление_авторов", "Добавление авторов"),
+            ("изменение_авторов", "Изменение авторов"),
+            ("удаление_авторов", "Удаление авторов"),
+        )
 
 
 @receiver(pre_save, sender=Author)

@@ -53,7 +53,10 @@ class Voting(models.Model):
 
     @property
     def status(self):
-        if self.date_start < timezone.now():
+        """
+        Статус голосования
+        """
+        if self.date_start > timezone.now():
             return 'Ожидает начала'
         if self.date_end > timezone.now():
             return 'В процессе'
@@ -61,6 +64,11 @@ class Voting(models.Model):
 
     class Meta:
         ordering = ['-date_start', ]
+        permissions = (
+            ("добавление_голосований", "Добавление голосований"),
+            ("изменение_голосований", "Изменение голосований"),
+            ("удаление_голосований", "Удаление голосований"),
+        )
 
     def get_agreed_url(self):
         return reverse('votings_agreed', kwargs={'pk': self.pk})

@@ -26,3 +26,6 @@ class Review(models.Model):
 
     def get_detail_url(self):
         return reverse('detail_review', kwargs={'review_id': self.pk, 'pk': self.article.pk})
+
+    def get_update_url(self):
+        return reverse('update_review', kwargs={'pk': self.pk })

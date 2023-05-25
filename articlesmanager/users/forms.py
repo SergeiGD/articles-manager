@@ -7,22 +7,13 @@ from .models import CustomUser, Position
 class CreateUsersForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'middle_name', 'position', 'email', 'password', ]
-
-    password = forms.CharField(widget=forms.PasswordInput())
+        fields = ['first_name', 'last_name', 'middle_name', 'position', 'email', ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for field in self.fields:
             self.fields[str(field)].widget.attrs.update({'class': 'form-control'})
-
-        self.fields['password'].label = 'Пароль'
-
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        password_validation.validate_password(password)
-        return password
 
 
 

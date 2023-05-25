@@ -36,8 +36,14 @@ class NotificationsDetail(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_link'] = self.get_object().get_delete_url()
+        return context
+
 
 def mark_as_checked(request, pk):
+    # отметить уведомление как прочитанное
     notification = get_object_or_404(Notification, pk=pk)
     notification.checked = True
     notification.save()
