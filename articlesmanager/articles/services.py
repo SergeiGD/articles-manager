@@ -18,8 +18,7 @@ def republish_article(user, article):
     # устанавливаем время
     article.date_repulished = timezone.now()
     article.save()
-    # отправляем уведомления
-    create_republished_notification(user, article)
+    create_republished_notification(article)
 
 
 def delete_article(article):
