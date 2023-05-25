@@ -191,11 +191,7 @@ class ArticlesDelete(PermissionRequiredMixin, DeleteView):
     model = Article
     success_url = reverse_lazy('articles')
 
-    def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
+    def post(self, request, *args, **kwargs):
         article = self.get_object()
         services.delete_article(article)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse_lazy('articles'))

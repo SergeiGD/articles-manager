@@ -72,7 +72,7 @@ class StatesDelete(PermissionRequiredMixin, DeleteView):
     model = State
     success_url = reverse_lazy('states')
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         state = self.get_object()
-        services.delete_state()
-        return HttpResponseRedirect(self.get_success_url())
+        services.delete_state(state)
+        return HttpResponseRedirect(reverse_lazy('states'))

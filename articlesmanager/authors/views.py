@@ -71,7 +71,7 @@ class AuthorsDelete(PermissionRequiredMixin, DeleteView):
     model = Author
     success_url = reverse_lazy('authors')
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         author = self.get_object()
         delete_author(author)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse_lazy('authors'))

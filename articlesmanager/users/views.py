@@ -80,10 +80,10 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
     model = CustomUser
     success_url = reverse_lazy('users')
 
-    def delete(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         user = self.get_object()
         services.delete_user(user)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse_lazy('users'))
 
 
 @permission_required('users.изменение_пользователей')
@@ -155,10 +155,11 @@ class PositionsDelete(PermissionRequiredMixin, DeleteView):
     model = Position
     success_url = reverse_lazy('positions')
 
-    def delete(self, request, *args, **kwargs):
+
+    def post(self, request, *args, **kwargs):
         position = self.get_object()
         services.delete_position(position)
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(reverse_lazy('positions'))
 
 
 class SelectGroupsList(PermissionRequiredMixin, ListView):
