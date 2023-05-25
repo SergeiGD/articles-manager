@@ -1,4 +1,5 @@
 from .models import Notification
+from users.models import CustomUser
 
 
 def create_reviewer_notification(user, article):
@@ -19,7 +20,7 @@ def create_republished_notification(article):
         )
 
 def create_voting_notification(voting, article):
-    for user in article.users.filter(date_deleted=None):
+    for user in CustomUser.objects.filter(date_deleted=None):
         Notification.objects.create(
                 user=user,
                 subject=Notification.NotificationsSubjects.VOTING,
