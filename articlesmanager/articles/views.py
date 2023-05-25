@@ -174,7 +174,7 @@ def add_user_to_article(request, pk, user_id):
     user = CustomUser.objects.get(pk=user_id)
     article.users.add(user)
     # отправляем уведомление о добавление в список ревьюверов
-    create_reviewer_notification(request.user, article)
+    create_reviewer_notification(user, article)
     return HttpResponseRedirect(article.get_update_url())
 
 

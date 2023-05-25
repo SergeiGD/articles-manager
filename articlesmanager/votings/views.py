@@ -56,7 +56,7 @@ class VotingsCreate(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect(redirect_to=article.votings.first().get_detail_url())
         form.instance.article = article
         form.instance.save()
-        create_voting_notification(form.instance, self.request.user, article)
+        create_voting_notification(form.instance, article)
         return HttpResponseRedirect(redirect_to=form.instance.get_detail_url())
 
 
