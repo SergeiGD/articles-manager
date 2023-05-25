@@ -2,6 +2,8 @@ import uuid
 
 from django.db import models
 from django.db.models import Max
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -65,7 +67,6 @@ class Article(models.Model):
         related_query_name='article',
         to=CustomUser,
     )
-    is_ready_to_votings = models.BooleanField(default=False, verbose_name='Готова к голосованию')
     date_created = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
     date_edited = models.DateTimeField(null=True, blank=True, verbose_name='Дата изменения')
     date_deleted = models.DateTimeField(null=True, blank=True, verbose_name='Дата удаления')
@@ -80,13 +81,12 @@ class Article(models.Model):
         )
 
     def get_current_state(self):
+        """
+        Получение текущего статуса статьи (тот, который присвоили последним)
+        """
         return self.states.filter(
             articlestate__date_set=self.states.aggregate(max_date=Max('articlestate__date_set'))['max_date']
         ).first()
-
-    def save(self, *args, **kwargs):
-        self.date_edited = timezone.now()
-        super().save(*args, **kwargs)
 
     @property
     def count_approved(self):
@@ -103,25 +103,6 @@ class Article(models.Model):
             approved=False,
             user__in=self.users.all(),
         ).count()
-
-    @property
-    def enable_for_votings(self):
-
-        if self.votings.exists():
-            return False
-
-        if self.is_ready_to_votings:
-            return True
-
-        if self.reviews.filter(
-            date_created__gt=self.date_repulished,
-        ).count() < self.users.filter(date_deleted=None).count():
-            return False
-
-        if self.count_approved <= self.count_unapproved:
-            return False
-
-        return True
 
     def get_update_url(self):
         return reverse('update_articles', kwargs={'pk': self.pk})
@@ -149,3 +130,13 @@ class Article(models.Model):
 
     def get_republished_url(self):
         return reverse('republish_review', kwargs={'pk': self.pk})
+
+    def get_voting_url(self):
+        if self.votings.exists():
+            return reverse('votings_detail',  kwargs={'pk': self.votings.order_by('-date_start').first().pk})
+        return ''
+
+
+@receiver(pre_save, sender=Article)
+def author_pre_save(sender, instance, **kwargs):
+    instance.date_edited = timezone.now()

@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 from .models import State
 from .forms import StatesForm
 from .filters import StateFilter
+from . import services
 
 
 class StatesList(LoginRequiredMixin, ListView):
@@ -72,11 +73,6 @@ class StatesDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('states')
 
     def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
         state = self.get_object()
-        state.date_deleted = timezone.now()
-        state.save()
+        services.delete_state()
         return HttpResponseRedirect(self.get_success_url())

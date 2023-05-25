@@ -43,6 +43,7 @@ class NotificationsDetail(LoginRequiredMixin, DetailView):
 
 
 def mark_as_checked(request, pk):
+    # отметить уведомление как прочитанное
     notification = get_object_or_404(Notification, pk=pk)
     notification.checked = True
     notification.save()

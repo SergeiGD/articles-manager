@@ -11,8 +11,9 @@ from notifications.models import Notification
 from .models import Voting, VotingUsers
 from articles.models import Article
 from .forms import VotingForm
-from notifications.utils import create_voting_notification
+from notifications.services import create_voting_notification
 from .filters import VotingFilter
+from .services import change_vote, get_current_vote, is_enable_to_vote, create_vote
 
 
 class VotingsList(LoginRequiredMixin, ListView):
@@ -55,12 +56,8 @@ class VotingsCreate(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect(redirect_to=article.votings.first().get_detail_url())
         form.instance.article = article
         form.instance.save()
-        Notification.objects.create(
-            user=self.request.user,
-            subject=Notification.NotificationsSubjects.VOTING,
-            content=create_voting_notification(form.instance),
-        )
-        return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
+        create_voting_notification(form.instance, self.request.user, article)
+        return HttpResponseRedirect(redirect_to=form.instance.get_detail_url())
 
 
 class VotingsUpdate(PermissionRequiredMixin, UpdateView):
@@ -82,14 +79,10 @@ class VotingsDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_vote = self.request.user.votingusers_set.filter(voting_id=self.object.id).first()
-        if user_vote is not None:
-            if user_vote.agreed:
-                context['current_vote'] = 'За'
-            else:
-                context['current_vote'] = 'Против'
-        else:
-            context['current_vote'] = 'Нет голоса'
-        enable_to_vote = self.object.date_start < timezone.now() < self.object.date_end
+        # определяем текущий голос
+        context['current_vote'] = get_current_vote(user_vote)
+        # определяем, началось ли уже голосование
+        enable_to_vote = is_enable_to_vote(self.object)
         context['enable_to_vote'] = enable_to_vote
         return context
 
@@ -101,17 +94,11 @@ def voting_agreed(request, pk):
         user_id=request.user.id,
     ).first()
     if user_voting is not None:
-        user_voting.agreed = True
-        user_voting.date_changed = timezone.now()
-        user_voting.save()
+        # если уже юзер уже голосовал и изменил голос
+        change_vote(user_voting, True)
     else:
-        VotingUsers.objects.create(
-            voting_id=voting.id,
-            user_id=request.user.id,
-            agreed=True,
-            date_changed=timezone.now(),
-        )
-    return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
+        create_vote(voting, request.user, True)
+    return HttpResponseRedirect(redirect_to=voting.get_detail_url())
 
 
 def voting_disagreed(request, pk):
@@ -121,14 +108,8 @@ def voting_disagreed(request, pk):
         user_id=request.user.id,
     ).first()
     if user_voting is not None:
-        user_voting.agreed = False
-        user_voting.date_changed = timezone.now()
-        user_voting.save()
+        # если уже юзер уже голосовал и изменил голос
+        change_vote(user_voting, False)
     else:
-        VotingUsers.objects.create(
-            voting_id=voting.id,
-            user_id=request.user.id,
-            agreed=False,
-            date_changed=timezone.now(),
-        )
-    return HttpResponseRedirect(redirect_to=reverse_lazy('votings'))
+        create_vote(voting, request.user, False)
+    return HttpResponseRedirect(redirect_to=voting.get_detail_url())

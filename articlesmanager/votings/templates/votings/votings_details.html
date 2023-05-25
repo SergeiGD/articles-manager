@@ -66,12 +66,12 @@
             <div class="d-flex justify-content-between mt-2 flex-wrap gap-3">
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-8">
                         <a href="{% url 'votings' %}" class="btn btn-outline-primary">К списку голосований</a>
                     </div>
 
                     {% if 'votings.изменение_голосований' in perms %}
-                        <div class="col-6">
+                        <div class="col-4">
                             <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
                         </div>
                     {% endif %}

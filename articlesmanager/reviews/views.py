@@ -1,15 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
 from .models import Review
 from articles.models import Article
 from .forms import ReviewsForm
 from .filters import ArticlesToReviewFilter
+from . import services
+from users.services import get_articles_to_review
 
 
 class ReviewsList(LoginRequiredMixin, ListView):
@@ -20,7 +19,7 @@ class ReviewsList(LoginRequiredMixin, ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        return self.request.user.get_articles_to_review()
+        return get_articles_to_review(self.request.user)
 
     def paginate_queryset(self, queryset, page_size):
         self.q_filter = ArticlesToReviewFilter(self.request.GET, queryset=self.get_queryset())
@@ -47,11 +46,7 @@ class ReviewsCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         article = context['article']
-        if self.request.user not in article.users.all():
-            raise PermissionDenied('Вы не являетесь рецензентом этой статьи')
-        form.instance.article = article
-        form.instance.user = self.request.user
-        form.instance.save()
+        services.create_review(form.instance, self.request.user, article)
         return HttpResponseRedirect(redirect_to=form.instance.article.get_detail_url())
 
 
@@ -72,7 +67,6 @@ class ReviewUpdate(LoginRequiredMixin, UpdateView):
         return self.get_object().article.get_detail_url()
 
     def form_valid(self, form):
-        if self.request.user != self.get_object().user:
-            raise PermissionDenied('Вы не являетесь автором этой рецензии')
+        services.check_is_reviewer(self.request.user, self.get_object().article)
         form.instance.save()
         return HttpResponseRedirect(redirect_to=form.instance.article.get_detail_url())

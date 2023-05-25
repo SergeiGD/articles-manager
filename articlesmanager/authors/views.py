@@ -1,13 +1,12 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
 from .models import Author
 from .forms import AuthorsForm
 from .filters import AuthorFilter
+from .services import delete_author
 
 
 class AuthorsList(LoginRequiredMixin, ListView):
@@ -73,11 +72,6 @@ class AuthorsDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('authors')
 
     def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
         author = self.get_object()
-        author.date_deleted = timezone.now()
-        author.save()
+        delete_author(author)
         return HttpResponseRedirect(self.get_success_url())

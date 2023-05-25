@@ -38,36 +38,6 @@ class CustomUser(AbstractUser):
     def get_notifications_count(self):
         return self.notifications.filter(checked=False).count()
 
-    def get_articles_to_review(self):
-        result = []
-        user_articles = self.articles.filter(
-            is_ready_to_votings=False,
-            date_deleted=None,
-            users__in=[self],
-        ).all()
-        for article in user_articles:
-            if not article.reviews.filter(
-                user=self,
-                date_created__gt=article.date_repulished,
-            ).exists():
-                result.append(article)
-
-        return self.articles.filter(id__in=[i.id for i in result])
-
-    def can_create_review(self, article):
-        if article.date_deleted is not None or article.is_ready_to_votings:
-            return False
-
-        if self not in article.users.all():
-            return False
-
-        if article.reviews.filter(
-            user=self,
-            date_created__gt=article.date_repulished
-        ).exists():
-            return False
-
-        return True
 
     def get_detail_url(self):
         return reverse('detail_users', kwargs={'pk': self.pk})

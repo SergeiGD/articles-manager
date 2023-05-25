@@ -3,15 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 from django.core.paginator import Paginator
-from django.core.mail import EmailMessage
 from .models import CustomUser, Position
 from .forms import CreateUsersForm, PositionForm, UpdateUserForm, ResetPasswordForm
 from groups.models import UserGroup
 from .filters import CustomUserFilter, PositionFilter
 from groups.filters import GroupFilter
+from . import services
 
 
 class UsersList(LoginRequiredMixin, ListView):
@@ -44,15 +43,7 @@ class UsersCreate(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        password = CustomUser.objects.make_random_password()
-        self.object.set_password(password)
-        self.object.save()
-        email = EmailMessage(
-            subject='Регистрация',
-            body=f'Ваш аккаунт создан. Пароль - {password}',
-            to=[self.object.email, ],
-        )
-        email.send()
+        services.register_user(self.object)
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -91,29 +82,14 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         user = self.get_object()
-        email = f'{user.email}_deleted'
-        count = 1
-        while CustomUser.objects.filter(email=email).exists():
-            email = f'{email}_deleted_{count}'
-            count += 1
-        user.date_deleted = timezone.now()
-        user.email = email
-        user.save()
+        services.delete_user(user)
         return HttpResponseRedirect(self.get_success_url())
 
 
 @permission_required('users.изменение_пользователей')
 def reset_user_password(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
-    password = CustomUser.objects.make_random_password()
-    user.set_password(password)
-    user.save()
-    email = EmailMessage(
-        subject='Изменение пароля',
-        body=f'Ваш пароль был изменен на {password}',
-        to=[user.email, ],
-    )
-    email.send()
+    services.reset_user(user)
     return HttpResponseRedirect(user.get_detail_url())
 
 
@@ -180,17 +156,15 @@ class PositionsDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('positions')
 
     def delete(self, request, *args, **kwargs):
-        """
-        Call the delete() method on the fetched object and then redirect to the
-        success URL.
-        """
         position = self.get_object()
-        position.date_deleted = timezone.now()
-        position.save()
+        services.delete_position(position)
         return HttpResponseRedirect(self.get_success_url())
 
 
 class SelectGroupsList(PermissionRequiredMixin, ListView):
+    """
+    Вью для добавления группы юзеру
+    """
     permission_required = ('groups.изменение_групп', 'users.изменение_пользователей')
     template_name = 'users/add_group_to_user.html'
     model = UserGroup

@@ -104,6 +104,9 @@ def remove_permission_from_group(request, pk, permission_id):
 
 
 class SelectUsersList(PermissionRequiredMixin, ListView):
+    """
+    Вью для добавления юзеров в статью
+    """
     permission_required = ('groups.изменение_групп', 'users.изменение_пользователей')
     template_name = 'groups/add_users_to_group.html'
     model = CustomUser

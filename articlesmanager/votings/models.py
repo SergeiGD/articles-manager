@@ -53,7 +53,10 @@ class Voting(models.Model):
 
     @property
     def status(self):
-        if self.date_start < timezone.now():
+        """
+        Статус голосования
+        """
+        if self.date_start > timezone.now():
             return 'Ожидает начала'
         if self.date_end > timezone.now():
             return 'В процессе'

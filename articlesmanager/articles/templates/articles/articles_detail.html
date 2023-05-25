@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-{% load articles_tags %}
 {% load static %}
 
 {% block header_meta %}
@@ -46,7 +45,7 @@
                 <span class="fs-5">{{ article.get_current_state.name }}</span>
             </div>
 
-            {% if not article.is_ready_to_votings %}
+
                 <div class="mt-3 col-12 row">
 
                     <div class="col-lg-6 col-sm-12">
@@ -60,7 +59,6 @@
                     </div>
 
                 </div>
-            {% endif %}
 
 
 
@@ -101,7 +99,8 @@
                         </div>
                     {% endif %}
 
-                    {% if article.is_ready_to_votings and not article.votings.exists and 'votings.добавление_голосований' in perms %}
+
+                    {% if is_enable_for_voting and 'votings.добавление_голосований' in perms %}
 
                         <div>
                             <a href="{{ article.get_create_voting_url }}" class="btn btn-outline-primary">Создать
@@ -111,7 +110,7 @@
 
                     {% if article.votings.exists %}
                         <div>
-                            <a href="{{ article.votings.last.get_detail_url }}" class="btn btn-outline-primary">Перейти
+                            <a href="{{ article.get_voting_url }}" class="btn btn-outline-primary">Перейти
                                 к голосованию</a>
                         </div>
                     {% endif %}
@@ -212,7 +211,7 @@
                                 Нет
                             {% endif %}
                         <td>
-                            {% if review.user == request.user %}
+                            {% if review.user == request.user and not article.votings.exists %}
                                 <a href="{{ review.get_update_url }}" class="btn btn-warning">Изменить</a>
                             {% else %}
                                 <a href="{{ review.get_detail_url }}" class="btn btn-primary">Просмотр</a>
