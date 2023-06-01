@@ -196,6 +196,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Дата</th>
                     <th scope="col">Положительная</th>
+                    <th scope="col">Актуальна</th>
                     <th scope="col">Опция</th>
                 </tr>
                 </thead>
@@ -210,6 +211,14 @@
                             {% else %}
                                 Нет
                             {% endif %}
+                        </td>
+                        <td>
+                            {% if review.date_created < article.date_repulished %}
+                                Нет
+                            {% else %}
+                                Да
+                            {% endif %}
+                        </td>
                         <td>
                             {% if review.user == request.user and not article.votings.exists %}
                                 <a href="{{ review.get_update_url }}" class="btn btn-warning">Изменить</a>
