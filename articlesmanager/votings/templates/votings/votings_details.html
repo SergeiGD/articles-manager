@@ -8,7 +8,7 @@
 
 {% block content %}
 
-    <legend class="text-center"> Голосование №4</legend>
+    <legend class="text-center"> Голосование {{ voting.pk }}</legend>
     <div class="card">
         <div class="card-body row">
 
@@ -61,13 +61,21 @@
             <div class="d-flex justify-content-between mt-2 flex-wrap gap-3">
 
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-4">
                         <a href="{% url 'votings' %}" class="btn btn-outline-primary">К списку голосований</a>
                     </div>
 
                     {% if 'votings.изменение_голосований' in perms %}
                         <div class="col-4">
                             <a href="{{ voting.get_update_url }}" class="btn btn-warning">Изменить</a>
+                        </div>
+                    {% endif %}
+
+                    {% if 'votings.удаление_голосований' in perms %}
+                        <div class="col-4">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#delete_modal">Удалить
+                            </button>
                         </div>
                     {% endif %}
                 </div>
@@ -86,6 +94,8 @@
             </div>
         </div>
     </div>
+
+    {% include 'core/delete_popup.html' %}
 
 {% endblock content %}
 
