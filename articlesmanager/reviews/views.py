@@ -47,7 +47,7 @@ class ReviewsCreate(LoginRequiredMixin, CreateView):
         context = self.get_context_data()
         article = context['article']
         services.create_review(form.instance, self.request.user, article)
-        return HttpResponseRedirect(redirect_to=form.instance.article.get_detail_url())
+        return HttpResponseRedirect(redirect_to=article.get_detail_url())
 
 
 class ReviewDetail(LoginRequiredMixin, DetailView):

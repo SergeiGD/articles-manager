@@ -166,7 +166,7 @@ class SelectGroupsList(PermissionRequiredMixin, ListView):
     """
     Вью для добавления группы юзеру
     """
-    permission_required = ('groups.изменение_групп', 'users.изменение_пользователей')
+    permission_required = ('users.изменение_пользователей', )
     template_name = 'users/add_group_to_user.html'
     model = UserGroup
     context_object_name = 'groups'
@@ -185,7 +185,7 @@ class SelectGroupsList(PermissionRequiredMixin, ListView):
         return super().paginate_queryset(self.q_filter.qs, page_size)
 
 
-@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
+@permission_required('users.изменение_пользователей')
 def add_group_to_user(request, pk, group_id):
     group = UserGroup.objects.get(pk=group_id)
     user = CustomUser.objects.get(pk=pk)
@@ -193,7 +193,7 @@ def add_group_to_user(request, pk, group_id):
     return HttpResponseRedirect(user.get_update_url())
 
 
-@permission_required('groups.изменение_групп', 'users.изменение_пользователей')
+@permission_required('users.изменение_пользователей')
 def remove_group_from_user(request, pk, group_id):
     group = UserGroup.objects.get(pk=group_id)
     user = CustomUser.objects.get(pk=pk)

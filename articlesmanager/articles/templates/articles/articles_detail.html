@@ -67,7 +67,7 @@
                     <div class="col">
                         <a href="{% url 'articles' %}" class="btn btn-outline-primary">К списку статей</a>
                     </div>
-                    {% if 'articles.изменение_статьей' in perms %}
+                    {% if 'articles.изменение_статей' in perms %}
 
                         <div class="col">
                             <a href="{{ article.get_update_url }}" class="btn btn-warning">Изменить</a>
@@ -76,14 +76,14 @@
                     {% endif %}
 
 
-                    {% if 'articles.изменение_статьей' in perms and not article.votings.exists %}
+                    {% if 'articles.изменение_статей' in perms and not article.votings.exists %}
                         <div class="col">
                             <a href="{{ article.get_republished_url }}" class="btn btn-info">Правки внесены</a>
                         </div>
                     {% endif %}
 
 
-                    {% if 'articles.удаление_статьей' in perms %}
+                    {% if 'articles.удаление_статей' in perms %}
                         <div class="col">
                             <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#delete_modal">Удалить</button>
                         </div>
@@ -196,6 +196,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Дата</th>
                     <th scope="col">Положительная</th>
+                    <th scope="col">Актуальна</th>
                     <th scope="col">Опция</th>
                 </tr>
                 </thead>
@@ -210,6 +211,14 @@
                             {% else %}
                                 Нет
                             {% endif %}
+                        </td>
+                        <td>
+                            {% if review.date_created < article.date_repulished %}
+                                Нет
+                            {% else %}
+                                Да
+                            {% endif %}
+                        </td>
                         <td>
                             {% if review.user == request.user and not article.votings.exists %}
                                 <a href="{{ review.get_update_url }}" class="btn btn-warning">Изменить</a>
