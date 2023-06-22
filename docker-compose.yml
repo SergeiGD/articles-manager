@@ -10,7 +10,7 @@ services:
       - ./articlesmanager/:/app/
     restart: on-failure
     ports:
-      - "8000:8000"
+      - "80:80"
       - "466:465"
     depends_on:
       - db

@@ -36,7 +36,8 @@ class VotingsList(LoginRequiredMixin, ListView):
         return context
 
 
-class VotingsCreate(LoginRequiredMixin, CreateView):
+class VotingsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('votings.добавление_голосований',)
     template_name = 'votings/votings_create.html'
     model = Voting
     context_object_name = 'voting'
@@ -61,7 +62,7 @@ class VotingsCreate(LoginRequiredMixin, CreateView):
 
 
 class VotingsUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ['change_voting', ]
+    permission_required = ('votings.изменение_голосований',)
     template_name = 'votings/votings_update.html'
     model = Voting
     context_object_name = 'voting'
@@ -84,7 +85,15 @@ class VotingsDetail(DetailView):
         # определяем, началось ли уже голосование
         enable_to_vote = is_enable_to_vote(self.object)
         context['enable_to_vote'] = enable_to_vote
+        context['delete_link'] = self.get_object().get_delete_url()
         return context
+
+
+class VotingsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('votings.удаление_голосований',)
+    model = Voting
+    success_url = reverse_lazy('votings')
+
 
 
 def voting_agreed(request, pk):

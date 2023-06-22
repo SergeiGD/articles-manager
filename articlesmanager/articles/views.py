@@ -57,7 +57,7 @@ class ArticlesDetail(LoginRequiredMixin, DetailView):
 
 
 class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
-    permission_required = ('articles.добавление_статьей', )
+    permission_required = ('articles.добавление_статей', )
     template_name = 'articles/articles_create.html'
     model = Article
     context_object_name = 'article'
@@ -74,7 +74,7 @@ class ArticlesCreate(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
 
 class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
-    permission_required = ('articles.изменение_статьей',)
+    permission_required = ('articles.изменение_статей',)
     template_name = 'articles/article_update.html'
     model = Article
     context_object_name = 'article'
@@ -91,14 +91,14 @@ class ArticlesUpdate(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(redirect_to=self.object.get_detail_url())
 
 
-@permission_required('articles.изменение_статьей')
+@permission_required('articles.изменение_статей')
 def mark_as_republished(request, pk):
     article = Article.objects.get(pk=pk)
     services.republish_article(request.user, article)
     return HttpResponseRedirect(article.get_detail_url())
 
 
-@permission_required('articles.изменение_статьей')
+@permission_required('articles.изменение_статей')
 def remove_author_from_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -106,7 +106,7 @@ def remove_author_from_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
-@permission_required('articles.изменение_статьей')
+@permission_required('articles.изменение_статей')
 def remove_user_from_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -115,7 +115,7 @@ def remove_user_from_article(request, pk, user_id):
 
 
 class SelectAuthorsList(PermissionRequiredMixin, ListView):
-    permission_required = ('articles.изменение_статьей', )
+    permission_required = ('articles.изменение_статей', )
     template_name = 'articles/add_author_to_article.html'
     model = Author
     context_object_name = 'authors'
@@ -138,7 +138,7 @@ class SelectAuthorsList(PermissionRequiredMixin, ListView):
 
 
 class SelectUsersList(PermissionRequiredMixin, ListView):
-    permission_required = ('articles.изменение_статьей',)
+    permission_required = ('articles.изменение_статей',)
     template_name = 'articles/add_user_to_article.html'
     model = CustomUser
     context_object_name = 'users'
@@ -160,7 +160,7 @@ class SelectUsersList(PermissionRequiredMixin, ListView):
         return context
 
 
-@permission_required('articles.изменение_статьей')
+@permission_required('articles.изменение_статей')
 def add_author_to_article(request, pk, author_id):
     article = Article.objects.get(pk=pk)
     author = Author.objects.get(pk=author_id)
@@ -168,7 +168,7 @@ def add_author_to_article(request, pk, author_id):
     return HttpResponseRedirect(article.get_update_url())
 
 
-@permission_required('articles.изменение_статьей')
+@permission_required('articles.изменение_статей')
 def add_user_to_article(request, pk, user_id):
     article = Article.objects.get(pk=pk)
     user = CustomUser.objects.get(pk=user_id)
@@ -187,7 +187,7 @@ def download_article(request, pk):
 
 
 class ArticlesDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('articles.удаление_статьей', )
+    permission_required = ('articles.удаление_статей', )
     model = Article
     success_url = reverse_lazy('articles')
 

@@ -33,7 +33,7 @@
 
             <a href="{{ request.path }}" class="btn btn-info w-100 mb-3">Очистить</a>
 
-            {% if 'articles.добавление_статьей' in perms %}
+            {% if 'articles.добавление_статей' in perms %}
                 <a href="{% url 'create_articles' %}" class="btn btn-primary w-100 mb-3">+ Добавить</a>
             {% endif %}
             <table class="table table-striped table-bordered">

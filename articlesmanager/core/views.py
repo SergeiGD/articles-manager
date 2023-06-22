@@ -1,5 +1,6 @@
 from django.contrib.auth import logout
 from django.shortcuts import redirect
+from django.views.generic import RedirectView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 from .forms import LoginForm
@@ -20,3 +21,7 @@ def logout_view(request):
         logout(request)
         return redirect('login')
     return redirect('login')
+
+
+class Index(RedirectView):
+    url = reverse_lazy('notifications')
