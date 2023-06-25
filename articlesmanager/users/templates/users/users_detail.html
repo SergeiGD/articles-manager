@@ -61,7 +61,10 @@
                 <div class="d-flex gap-3">
                     {% if 'users.изменение_пользователей' in perms %}
                         <div class="col">
-                            <a href="{{ user.get_reset_password_url }}" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reset_modal">Сбросить пароль</a>
+                            <form action="{{ user.get_reset_password_url }}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reset_modal">Сбросить пароль</button>
+                            </form>
                         </div>
                     {% endif %}
                 </div>
