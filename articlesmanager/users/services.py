@@ -9,13 +9,8 @@ def register_user(user):
     password = CustomUser.objects.make_random_password()
     user.set_password(password)
     user.save()
-    # отправляем пароль на почту
-    email = EmailMessage(
-        subject='Регистрация',
-        body=f'Ваш аккаунт создан. Пароль - {password}',
-        to=[user.email, ],
-    )
-    email.send()
+    # возвращаем пароль
+    return password
 
 
 def delete_user(user):
@@ -35,13 +30,7 @@ def reset_user(user):
     password = CustomUser.objects.make_random_password()
     user.set_password(password)
     user.save()
-    # отправляем пароль на почту
-    email = EmailMessage(
-        subject='Изменение пароля',
-        body=f'Ваш пароль был изменен на {password}',
-        to=[user.email, ],
-    )
-    email.send()
+    return password
 
 
 def delete_position(position):

@@ -63,7 +63,7 @@
                         <div class="col">
                             <form action="{{ user.get_reset_password_url }}" method="POST">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#reset_modal">Сбросить пароль</button>
+                                <button type="submit" class="btn btn-info">Сбросить пароль</button>
                             </form>
                         </div>
                     {% endif %}
@@ -98,24 +98,6 @@
             </table>
         </div>
     </div>
-
-    <div class="modal fade" id="reset_modal" tabindex="-1" aria-labelledby="reset_modal_label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="reset_modal_label">Сброс пароля</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Новый пароль был отправлен на электронную почту пользователя ({{ user.email }})</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary w-10r" data-bs-dismiss="modal">Ок</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     {% include 'core/delete_popup.html' %}
 

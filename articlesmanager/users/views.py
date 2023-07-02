@@ -43,8 +43,9 @@ class UsersCreate(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        services.register_user(self.object)
-        return HttpResponseRedirect(self.get_success_url())
+        password = services.register_user(self.object)
+        return render(self.request, 'users/password_set_info.html', context={'user': self.object, 'password': password})
+        #return HttpResponseRedirect(self.get_success_url(), kwargs={'user': self.object, 'password': password})
 
 
 class UsersDetail(LoginRequiredMixin, DetailView):
@@ -89,8 +90,8 @@ class UsersDelete(PermissionRequiredMixin, DeleteView):
 @permission_required('users.изменение_пользователей')
 def reset_user_password(request, pk):
     user = get_object_or_404(CustomUser, pk=pk)
-    services.reset_user(user)
-    return HttpResponseRedirect(user.get_detail_url())
+    password = services.reset_user(user)
+    return render(request, 'users/password_set_info.html', context={'user': user, 'password': password})
 
 
 class PositionsList(LoginRequiredMixin, ListView):

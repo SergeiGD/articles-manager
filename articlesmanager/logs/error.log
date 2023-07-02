@@ -1,3 +1,0 @@
-[Thu Jun 22 12:38:51.543077 2023] [wsgi:error] [pid 17:tid 140320801851136] [remote 172.18.0.1:44186] Not Found: /favicon.ico
-[Sun Jun 25 13:47:09.921430 2023] [wsgi:error] [pid 18:tid 140646712628992] [remote 172.18.0.1:37640] Forbidden (CSRF token missing.): /users/15/reset/
-[Sun Jun 25 13:47:09.970980 2023] [wsgi:error] [pid 18:tid 140646721021696] [remote 172.18.0.1:37640] Not Found: /favicon.ico
